@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Job - Nobleworld</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/png">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">
+                <h1>Nobleworld</h1>
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/browse-jobs">Browse Jobs</a></li>
+                <li><a href="/about-us">About Us</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="form-container">
+        <h1>Post a New Job</h1>
+        <form id="jobPostingForm">
+            <div class="form-group">
+                <label for="jobTitle">Job Title</label>
+                <input type="text" id="jobTitle" name="jobTitle" required>
+            </div>
+
+            <div class="form-group">
+                <label for="companyName">Company Name</label>
+                <input type="text" id="companyName" name="companyName" required> 
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" placeholder="e.g., Lagos, Nigeria" required> 
+            </div>
+
+            <div class="form-group">
+                <label for="jobType">Job Type</label>
+                <select id="jobType" name="jobType">
+                    <option value="full-time">Full-time</option>
+                    <option value="part-time">Part-time</option>
+                    <option value="contract">Contract</option>
+                    <option value="temporary">Temporary</option>
+                    <option value="internship">Internship</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="salary">Salary (Optional)</label>
+                <input type="text" id="salary" name="salary" placeholder="e.g., ₦50,000 - ₦100,000 / month">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Job Description</label>
+                <textarea id="description" name="description" rows="8" required></textarea> </div>
+
+            <div class="form-group">
+                <label for="requirements">Requirements</label>
+                <textarea id="requirements" name="requirements" rows="6" required></textarea> </div>
+
+            <div class="form-group">
+                <label for="applicationEmail">Application Email</label>
+                <input type="email" id="applicationEmail" name="applicationEmail">
+            </div>
+
+            <div class="form-group">
+                <label for="phoneNumber">Application Phone (Optional)</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="e.g., +2348012345678">
+            </div>
+
+            <button type="submit" class="submit-button">Post Job</button>
+        </form>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const jobPostingForm = document.getElementById('jobPostingForm');
+
+            if (!jobPostingForm) {
+                console.error("Error: jobPostingForm element not found in the HTML.");
+                return;
+            }
+
+            jobPostingForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                const jobTitle = document.getElementById('jobTitle').value.trim();
+                const companyName = document.getElementById('companyName').value.trim();
+                const location = document.getElementById('location').value.trim();
+                const jobType = document.getElementById('jobType').value;
+                const salary = document.getElementById('salary').value.trim();
+                const description = document.getElementById('description').value.trim();
+                const requirements = document.getElementById('requirements').value.trim();
+                const applicationEmail = document.getElementById('applicationEmail').value.trim();
+                const phoneNumber = document.getElementById('phoneNumber').value.trim();
+
+                // FIX 1: Client-side validation for at least one contact method
+                if (!applicationEmail && !phoneNumber) {
+                    alert('Please provide either an Application Email or a Phone Number.');
+                    return; // Stop submission
+                }
+
+                const jobData = {
+                    title: jobTitle,
+                    company: companyName,
+                    location: location,
+                    type: jobType,
+                    salary: salary,
+                    description: description,
+                    requirements: requirements,
+                    application_email: applicationEmail,
+                    phone_number: phoneNumber
+                };
+
+                try {
+                    // Check endpoint path and port (http://127.0.0.1:8000/api/post-job is correct for Flask)
+                    const response = await fetch('http://127.0.0.1:8000/api/post-job', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(jobData),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert(data.message || 'Job posted successfully!');
+                        jobPostingForm.reset();
+                        // Optionally redirect to browse jobs after success
+                        // window.location.href = '/browse-jobs'; 
+                    } else {
+                        alert('Error posting job: ' + (data.error || 'Unknown error'));
+                        console.error('Server error response:', data);
+                    }
+                } catch (error) {
+                    console.error('Error posting job:', error);
+                    alert('An error occurred while posting the job. Check console for details.');
+                }
+            });
+        });
+    </script>
+    <footer>
+        <p>&copy; 2025 Nobleworld. All rights reserved.</p>
+    </footer>
+</body>
+</html>

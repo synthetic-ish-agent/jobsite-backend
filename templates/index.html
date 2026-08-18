@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+    <title>Nobleworld - Your Next Opportunity Awaits</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <meta name="description" content="Find the best job opportunities online with Nobleworld. Browse listings, apply easily, and connect with top companies.">
+  <meta name="keywords" content="jobs, career, employment, hiring, recruitment, job search">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/png">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">
+                <h1>Nobleworld</h1>
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/browse-jobs">Browse Jobs</a></li>
+                {% if session.get('user_id') == 1 %}
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('post_job_page') }}">Post a Job</a>
+    </li>
+{% endif %}
+                <li><a href="/resume-builder">Build Resume</a></li>
+                <li><a href="/about-us">About Us</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Find Your Dream Job Today</h1>
+                <div class="search-bar">
+                    <input type="text"
+                    id='searchInput'
+                    placeholder="Enter keywords or job title">
+                    <button id='searchButton'>Search</button>
+                </div>
+            </div>
+        </section>
+        <div id="searchResults"
+        class="job-listings-container"></div>
+
+        <section class="call-to-action">
+            <h2>Ready to Take the Next Step?</h2>
+            <p>Create an account to save jobs, track your applications, and get personalized recommendations.</p>
+            <a href="/register" class="signup-button">Sign Up</a>
+        </section>
+    </main>
+    <div class='chat-toggle' id='chatToggle'>💬</div>
+    <div class='chat-container' id='chatContainer'>
+    <div class='chat-header'>
+        <h2>Chat</h2>
+    </div>
+    <div class='chat-messages' id='chatMessages'>
+        </div>
+    <div class='chat-username-section' id='chatUsernameSection'>
+        <input type="text" id="chatUsernameInput" placeholder="Enter your chat username">
+        <button id="setChatUsernameButton">Set Username</button>
+    </div>
+    <div class='chat-input' id='chatInputSection' style="display: none;"> <input type="text" id='messageInput' placeholder="Type your message...">
+        <button id='sendButton'>Send</button>
+    </div>
+</div>
+    
+    <footer>
+        <p>&copy; 2025 Nobleworld. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    
+</body>
+</html>

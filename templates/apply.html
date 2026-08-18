@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Job - Nobleworld</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}"> 
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/png">
+    <style>
+        .container {
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            line-height: 1.6;
+            min-height: 400px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="file"],
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+            height: 120px;
+        }
+        button.submit-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button.submit-button:hover {
+            background-color: #0056b3;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="{{ url_for('home') }}">
+                <h1>Nobleworld</h1>
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('browse_jobs_page') }}">Browse Jobs</a></li>
+                {% if session.get('user_id') == 1 %}
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('post_job_page') }}">Post a Job</a>
+    </li>
+{% endif %}
+                <li><a href="{{ url_for('about_us') }}">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container">
+        <h1>Job Application</h1>
+        <p id="form-instructions">Please fill out the form below to apply for this position.</p>
+
+        <!-- Dynamic job title target if coming from a job detail view -->
+        <div id="applied-job-title" style="font-weight: bold; margin-bottom: 15px; color: #555;"></div>
+
+        <form id="jobApplicationForm" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number (Optional)</label>
+                <input type="text" id="phone" name="phone">
+            </div>
+
+            <div class="form-group">
+                <label for="resume">Upload Resume/CV</label>
+                <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+                <small>Accepted file types: PDF, DOC, DOCX</small>
+            </div>
+
+            <div class="form-group">
+                <label for="coverLetter">Cover Letter (Optional)</label>
+                <textarea id="coverLetter" name="coverLetter" placeholder="Write a brief cover letter"></textarea>
+            </div>
+
+            <button type="submit" class="submit-button">Submit Application</button>
+        </form>
+
+        <div id="submission-message" style="display:none; margin-top: 20px; color: green; font-weight: bold;">
+            Your application has been submitted successfully!
+            <p><a href="{{ url_for('browse_jobs_page') }}" class="back-button">Back to Job Listings</a></p>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // Grab job ID from URL parameters if passed (e.g., /apply?id=5)
+                const urlParams = new URLSearchParams(window.location.search);
+                const jobId = urlParams.get('id');
+                
+                if (jobId) {
+                    // Fetch job info using a portable relative URL path
+                    fetch(`/api/jobs`)
+                        .then(res => res.json())
+                        .then(jobs => {
+                            const job = jobs.find(j => String(j.id) === String(jobId));
+                            if (job && job.title) {
+                                document.getElementById('applied-job-title').innerText = `Applying for: ${job.title} at ${job.company}`;
+                            }
+                        })
+                        .catch(err => console.log('Could not load specific job header', err));
+                }
+
+                // Handle form toggle and submission asynchronously
+                document.getElementById('jobApplicationForm').addEventListener('submit', function(event) {
+                    event.preventDefault(); // Stop normal submission behavior
+
+                    const formData = new FormData(this);
+                    if (jobId) {
+                        formData.append('jobId', jobId);
+                    }
+
+                    // Point directly to the correct backend route using a relative path
+                    fetch('/api/apply', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'Application submitted successfully!') {
+                            // Toggles the form out of view and shows success message cleanly
+                            document.getElementById('jobApplicationForm').style.display = 'none';
+                            document.getElementById('form-instructions').style.display = 'none';
+                            const titleTag = document.getElementById('applied-job-title');
+                            if (titleTag) titleTag.style.display = 'none';
+                            
+                            document.getElementById('submission-message').style.display = 'block';
+                        } else if (data.error) {
+                            alert('Submission Error: ' + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error submitting application:', error);
+                        alert('An error occurred during submission.');
+                    });
+                });
+            });
+        </script>
+    </main>
+    <footer>
+        <p>&copy; 2026 Nobleworld. All rights reserved.</p>
+    </footer>
+</body>
+</html>

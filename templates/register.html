@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Register</h1>
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" name="fullName" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" required>
+                    <div class="password-toggle">
+                        <input type="checkbox" id="togglePassword">
+                        <label for="togglePassword">Show Password</label>
+                        </div>
+                    </div>
+                </div>
+            <button type="submit" class="submit-button">Register</button>
+            <p>Already have an account? <a href="{{ url_for('login_page') }}">Login here</a></p>
+        </form>
+        <div id="registrationMessage"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const registrationForm = document.getElementById('registrationForm');
+            // Get the message div outside the event listener or fetch chain
+            const registrationMessageDiv = document.getElementById('registrationMessage');
+
+            registrationForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                const fullName = document.getElementById('fullName').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                const registrationData = {
+                    fullName: fullName,
+                    email: email,
+                    password: password
+                };
+
+                try { // Added try-catch block for better error handling
+                    const response = await fetch('http://127.0.0.1:8000/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(registrationData)
+                    });
+
+                    const data = await response.json();
+
+                    registrationMessageDiv.innerText = data.message || data.error;
+                    if (response.ok) { // Check for 2xx status codes (success)
+                        registrationMessageDiv.style.color = 'green';
+                        if (data.message === 'Registration successful!') {
+                            setTimeout(() => {
+                                window.location.href = '{{ url_for("login_page") }}';
+                            }, 2000);
+                        }
+                    } else { // Handle non-2xx status codes (errors from server)
+                        registrationMessageDiv.style.color = 'red';
+                        console.error('Registration error response:', data.error);
+                    }
+
+                } catch (error) {
+                    console.error('Error during registration fetch:', error);
+                    registrationMessageDiv.style.color = 'red';
+                    registrationMessageDiv.innerText = 'An unexpected error occurred. Please check console for details.';
+                }
+            });
+        });
+        const passwordInput = document.getElementById('password');
+        const toggleCheckbox = document.getElementById('togglePassword');
+        toggleCheckbox.addEventListener('change', function()
+    {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+        } else {
+            passwordInput.type = 'password';
+        }
+    })
+    </script>
+</body>
+</html>

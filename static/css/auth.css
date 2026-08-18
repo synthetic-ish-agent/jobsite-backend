@@ -1,0 +1,128 @@
+/* style.css (or a new CSS file like auth.css) */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 90%;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: calc(100% - 12px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.submit-button {
+    background-color: #00838f;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #005f6b;
+}
+
+#registrationMessage,
+#loginMessage {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#registrationMessage.success,
+#loginMessage.success {
+    color: green;
+}
+
+#registrationMessage.error,
+#loginMessage.error {
+    color: red;
+}
+
+p {
+    text-align: center;
+    margin-top: 20px;
+    color: #777;
+}
+
+a {
+    color: #00838f;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+/* Style for the navigation buttons */
+.navigation-buttons {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.back-button,
+.guest-button {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #555;
+    background-color: #eee;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+}
+
+.back-button:hover,
+.guest-button:hover {
+    background-color: #ddd;
+}
+
+p {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: #777;
+}

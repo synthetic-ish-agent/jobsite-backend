@@ -1,0 +1,294 @@
+/* =================================================================auts
+   Job Listings & Container Layout
+   ================================================================ */
+.job-listings {
+    padding: 2em;
+    background-color: #f9f9f9;
+}
+
+.job-listings h2 {
+    color: #333;
+    border-bottom: 2px solid #00838f;
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+/* Grid layout applied directly to the container holding your JavaScript job cards */
+#jobListings,
+.job-listings-container #jobListings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5em;
+    width: 100%;
+}
+
+/* Individual Job Card Styling */
+.job-listing {
+    background-color: white;
+    padding: 1.5em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.job-listing:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.job-listing h3 {
+    margin-top: 0;
+    color: #00838f;
+    margin-bottom: 0.5em;
+    font-size: 1.25rem;
+}
+
+.job-listing .company {
+    color: #555;
+    margin-bottom: 0.3em;
+    font-size: 0.9em;
+}
+
+.job-listing .type,
+.job-listing .salary {
+    margin-bottom: 0.5em;
+    font-size: 0.9em;
+}
+
+.job-listing .salary {
+    color: #059669;
+    font-weight: 600;
+}
+
+/* Clean list layout for description and requirements blocks */
+.job-text-block {
+    background: #f8fafc;
+    border-left: 3px solid #00838f;
+    padding: 8px 12px;
+    margin: 8px 0;
+    border-radius: 0 6px 6px 0;
+}
+
+.job-text-block ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.job-text-block li {
+    margin-bottom: 3px;
+    color: #444;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.job-listing .description,
+.job-listing .requirements {
+    color: #444;
+    line-height: 1.4;
+    margin-bottom: 0.8em;
+    font-size: 0.95em;
+}
+
+.job-listing .application-contact {
+    font-size: 0.9em;
+    margin: 6px 0;
+    color: #333;
+}
+
+/* Direct Apply Block */
+.direct-apply-block {
+    margin-top: 12px;
+    font-weight: 500;
+}
+
+.direct-apply-link {
+    color: #2563EB;
+    text-decoration: underline;
+}
+
+.direct-apply-link:hover {
+    color: #1d4ed8;
+}
+
+/* Footer Meta & Action Buttons */
+.job-meta-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    font-size: 0.85em;
+    color: #777;
+}
+
+.job-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.btn-sm, 
+.job-actions button {
+    padding: 6px 12px;
+    font-size: 0.85em;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-info {
+    background-color: #0284c7;
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: #0369a1;
+}
+
+.btn-danger {
+    background-color: #dc2626;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+}
+
+.view-details {
+    color: #00838f;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9em;
+}
+
+.view-details:hover {
+    text-decoration: underline;
+}
+
+/* Unified Pagination Controls Styling */
+.pagination-controls,
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 30px 0;
+    padding: 1em;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.pagination-controls button,
+.page-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #2563EB;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    border: 1px solid #2563EB;
+    font-size: 0.9em;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.pagination-controls button:hover,
+.page-link:hover {
+    background-color: #1d4ed8;
+}
+
+.pagination-controls button:disabled {
+    background-color: #cbd5e1;
+    border-color: #cbd5e1;
+    cursor: not-allowed;
+}
+
+.pagination-controls span {
+    font-size: 0.95rem;
+    color: #374151;
+    font-weight: 500;
+}
+
+/* Utility Buttons */
+.back-to-home-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 15px;
+    cursor: pointer;
+    border: none;
+    font-size: 1em;
+}
+
+.back-to-home-button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 600px) {
+    #jobListings,
+    .job-listings-container #jobListings {
+        grid-template-columns: 1fr;
+    }
+    .job-listings {
+        padding: 1em;
+    }
+    .job-listings h2 {
+        font-size: 1.5em;
+        margin-bottom: 0.8em;
+    }
+    .job-listing {
+        padding: 1em;
+    }
+    .job-listing h3 {
+        font-size: 1.2em;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 992px) {
+    #jobListings,
+    .job-listings-container #jobListings {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
+/* Truncated description container */
+.job-text-collapse {
+    max-height: 120px; /* Adjust this height to control how much text shows initially */
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.3s ease-in-out;
+}
+
+/* Expanded state class applied via JavaScript */
+.job-text-collapse.expanded {
+    max-height: 1000px; 
+}
+
+/* Read More / Read Less Toggle Link */
+.read-more-btn {
+    background: none;
+    border: none;
+    color: #2563EB;
+    font-weight: 500;
+    font-size: 0.9em;
+    cursor: pointer;
+    padding: 4px 0;
+    margin-top: 6px;
+    display: inline-block;
+}
+
+.read-more-btn:hover {
+    text-decoration: underline;
+    color: #1d4ed8;
+}

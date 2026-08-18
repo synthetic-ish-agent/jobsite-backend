@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Job - Nobleworld</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/png">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">
+                <h1>Nobleworld</h1>
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/browse-jobs">Browse Jobs</a></li>
+                <li><a href="/about-us">About Us</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="form-container">
+        <h1>Edit Existing Job Post</h1>
+        <form id="jobPostingForm">
+            <div class="form-group">
+                <label for="jobTitle">Job Title</label>
+                <input type="text" id="jobTitle" name="jobTitle" required value="{{job.title}}">
+            </div>
+
+            <div class="form-group">
+                <label for="companyName">Company Name</label>
+                <input type="text" id="companyName" name="companyName" required value="{{job.company}}">
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" placeholder="e.g., Lagos, Nigeria" required value="{{job.location}}">
+            </div>
+
+            <div class="form-group">
+                <label for="jobType">Job Type</label>
+                <select id="jobType" name="jobType" required>
+                    <option value="full-time" {% if job.type == 'full-time' %}selected{% endif %}>Full-time</option>
+                    <option value="part-time" {% if job.type == 'part-time' %}selected{% endif %}>Part-time</option>
+                    <option value="contract" {% if job.type == 'contract' %}selected{% endif %}>Contract</option>
+                    <option value="temporary" {% if job.type == 'temporary' %}selected{% endif %}>Temporary</option>
+                    <option value="internship" {% if job.type == 'internship' %}selected{% endif %}>Internship</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="salary">Salary (Optional)</label>
+                <input type="text" id="salary" name="salary" placeholder="e.g., ₦50,000 - ₦100,000 / month" value="{{job.salary}}">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Job Description</label>
+                <textarea id="description" name="description" rows="8" required>{{job.description}}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="requirements">Requirements</label>
+                <textarea id="requirements" name="requirements" rows="6">{{job.requirements}}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="applicationEmail">Application Email</label>
+                <input type="email" id="applicationEmail" name="applicationEmail" value="{{job.application_email}}">
+            </div>
+
+            <div class="form-group">
+                <label for="phoneNumber">Application Phone (Optional)</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="e.g., +2348012345678" value="{{job.phone_number}}">
+            </div>
+
+            <button type="submit" class="submit-button">Update Job</button>
+        </form>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const jobPostingForm = document.getElementById('jobPostingForm');
+
+            // Extracts the job ID from the URL path (e.g., /edit-job/123 -> 123)
+            const jobId = window.location.pathname.split('/').pop();
+
+            if (!jobPostingForm) {
+                console.error("Error: jobPostingForm element not found in the HTML.");
+                return;
+            }
+
+            jobPostingForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                // Collect all current form values
+                const jobTitle = document.getElementById('jobTitle').value;
+                const companyName = document.getElementById('companyName').value;
+                const location = document.getElementById('location').value;
+                const jobType = document.getElementById('jobType').value;
+                const salary = document.getElementById('salary').value;
+                const description = document.getElementById('description').value;
+                const requirements = document.getElementById('requirements').value;
+                const applicationEmail = document.getElementById('applicationEmail').value;
+                const phoneNumber = document.getElementById('phoneNumber').value; 
+
+                const jobData = {
+                    title: jobTitle,
+                    company: companyName,
+                    location: location,
+                    type: jobType,
+                    salary: salary,
+                    description: description,
+                    requirements: requirements,
+                    application_email: applicationEmail,
+                    phone_number: phoneNumber
+                };
+
+                try {
+                    // Send PUT request to the API endpoint with the job ID
+                    const response = await fetch(`/api/jobs/${jobId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(jobData),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert(data.message || 'Job updated successfully!');
+                        window.location.href = '/browse-jobs';
+                    } else {
+                        alert('Error updating job: ' + (data.error || 'Unknown error'));
+                        console.error('Server error response:', data);
+                    }
+                } catch (error) {
+                    console.error('Error updating job:', error);
+                    alert('An error occurred while updating the job. Check console for details.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

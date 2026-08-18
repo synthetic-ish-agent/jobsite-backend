@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nobleworld Resume Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto+Slab:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+
+        .container-fluid {
+            width: 95%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Custom CSS variables for dynamic coloring */
+        :root {
+            --primary-color: #2563EB; /* Default blue-600 */
+        }
+
+        /* Font Size Classes */
+        .resume-small { font-size: 0.85rem; line-height: 1.35; }
+        .resume-normal { font-size: 1rem; line-height: 1.5; }
+        .resume-large { font-size: 1.1rem; line-height: 1.6; }
+
+        /* Margin Classes */
+        .margin-tight { padding: 0.5cm !important; }
+        .margin-normal { padding: 1cm !important; }
+        .margin-loose { padding: 1.5cm !important; }
+
+        .input-field {
+            display: block;
+            width: 100%;
+            border-radius: 0.375rem;
+            border-color: #d1d5db;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            padding: 0.5rem;
+            background-color: #ffffff;
+            border-width: 1px;
+        }
+
+        .input-field:focus {
+            border-color: #3b82f6;
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            --tw-ring-color: #3b82f6;
+        }
+
+        /* Robust Print Styles */
+        @media print {
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-family: 'Inter', sans-serif !important;
+                color: #000 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Hide controls and non-resume UI elements */
+            #controls, .print-hidden, header, nav, aside:not(#sidebar) {
+                display: none !important;
+            }
+
+            /* Clean layout wrapper for print page */
+            #resume-preview {
+                box-shadow: none !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: block !important;
+                overflow: visible !important;
+                background-color: transparent !important;
+            }
+
+            /* Preserve flex and grid positioning so columns don't slide into each other */
+            .two-column-template {
+                display: flex !important;
+                flex-direction: row !important;
+                width: 100% !important;
+            }
+
+            .two-column-template #sidebar {
+                flex: 0 0 32% !important; /* Locks sidebar width ratio cleanly */
+                max-width: 32% !important;
+                margin: 0 !important;
+                border: none !important;
+            }
+
+            .two-column-template #main-content {
+                flex: 1 !important;
+                padding-left: 20px !important;
+                margin: 0 !important;
+            }
+
+            /* Prevent element clipping and text overlapping across pages */
+            p, span, div, li, h1, h2, h3 {
+                orphans: 3;
+                widows: 3;
+            }
+
+            /* Prevent elements from splitting awkwardly across print page breaks */
+            .resume-section, article, tr {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div class="container-fluid py-8">
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div id="controls" class="lg:col-span-1 p-6 bg-white rounded-xl shadow-lg h-full print-hidden">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Nobleworld Resume Builder 🌍</h2>
+
+                <div class="mb-4">
+                    <label for="template-select" class="block text-sm font-medium text-gray-700">Select Template</label>
+                    <select id="template-select" name="template" data-path="template" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 bg-white border">
+                        <option value="classic">Classic Professional</option>
+                        <option value="modern_blocks">Modern Blocks</option>
+                        <option value="minimalist_sidebar">Minimalist Sidebar</option>
+                        <option value="modern_professional">Modern Professional (New)</option>
+                        <option value="creative_focus">Creative Focus (New)</option>
+                        
+                        <option value="rn_modern">Resumenerd - Modern Edge</option>
+                        <option value="rn_classic_2">Resumenerd - Classic Pro 2.0</option>
+                        <option value="rn_data_viz">Resumenerd - Data Visualization</option>
+                        <option value="rn_executive">Resumenerd - Executive Focus</option>
+                        <option value="rn_tech_minimal">Resumenerd - Tech Minimalist</option>
+                        <option value="rn_bold_sidebar">Resumenerd - Bold Sidebar</option>
+                        <option value="rn_clean">Resumenerd - Clean Slate</option>
+                        <option value="rn_academic">Resumenerd - Academic Standard</option>
+                        <option value="rn_creative_pro">Resumenerd - Creative Professional</option>
+                        <option value="rn_hybrid">Resumenerd - Hybrid Chronological</option>
+                    </select>
+                </div>
+
+                <div id="accordion-container" class="space-y-4">
+                    
+                   <div class="border rounded-lg shadow-sm bg-indigo-50">
+
+                        <button type="button" class="accordion-header flex items-center justify-between w-full p-4 font-medium text-left text-indigo-900 rounded-t-lg" data-target="formatting-content">
+
+                            <span>🎨 Formatting & Style</span>
+
+                            <svg class="w-5 h-5 transition-transform duration-300" data-icon="formatting-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+
+                        </button>
+
+                        <div id="formatting-content" class="accordion-content p-4 border-t hidden space-y-3">
+
+                            <label class="block text-sm font-medium text-gray-700">Font Family:</label>
+
+                            <select name="fontFamily" data-path="style.fontFamily" class="input-field p-2 bg-white">
+
+                                <option value="Inter">Inter (Sans-serif)</option>
+
+                                <option value="serif">Times New Roman (Serif)</option>
+
+                                <option value="mono">Monospace (Code)</option>
+
+                                <option value="Roboto Slab">Roboto Slab (Slab Serif)</option>
+
+                            </select>
+
+
+
+                            <label class="block text-sm font-medium text-gray-700">Font Size:</label>
+
+                            <select name="fontSize" data-path="style.fontSize" class="input-field p-2 bg-white">
+
+                                <option value="small">Small</option>
+
+                                <option value="normal">Normal</option>
+
+                                <option value="large">Large</option>
+
+                            </select>
+
+
+
+                            <label class="block text-sm font-medium text-gray-700">Margins:</label>
+
+                            <select name="margins" data-path="style.margins" class="input-field p-2 bg-white">
+
+                                <option value="tight">Tight (More content)</option>
+
+                                <option value="normal">Normal (Standard)</option>
+
+                                <option value="loose">Loose (Less content)</option>
+
+                            </select>
+
+
+
+                            <label class="block text-sm font-medium text-gray-700">Primary Color (Accent):</label>
+
+                            <input type="color" name="primaryColor" data-path="style.primaryColor" class="w-full h-10 border border-gray-300 rounded-md p-1 cursor-pointer">
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <div class="border rounded-lg shadow-sm bg-red-50">
+
+                        <button type="button" class="accordion-header flex items-center justify-between w-full p-4 font-medium text-left text-red-900 rounded-t-lg" data-target="review-scorecard-content">
+
+                            <span>💯 Full Resume Review & Scorecard (Pro Mock)</span>
+
+                            <svg class="w-5 h-5 transition-transform duration-300" data-icon="review-scorecard-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+
+                        </button>
+
+                        <div id="review-scorecard-content" class="accordion-content p-4 border-t hidden space-y-3">
+
+                        <div id="scorecard-mock" class="p-3 bg-white border border-gray-200 rounded-md">  
+
+                                <p class="text-sm font-semibold mt-3 text-gray-700">Overall Score: <span id="overall-score" class="text-2xl font-extrabold text-red-600">68%</span> (Calculated Mock)</p>
+
+                                <ul class="list-none space-y-2 text-sm text-gray-600 mt-3">
+
+                                    <li class="flex justify-between items-center">
+
+                                       <span>✅ **ATS Readability**</span>
+                                    <span class="font-bold" id="ats-score">--%</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>🔶 **Impact Metrics (Verbs & Metrics)**</span>
+                                    <span class="font-bold" id="impact-score">--%</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>🟡 **Section Length & Flow**</span>
+                                    <span class="font-bold" id="length-score">--%</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>🔴 **Keyword Density (Internal)**</span>
+                                    <span class="font-bold" id="keyword-score">--%</span>
+                                </li>
+                            </ul><span>✅ **ATS Readability**</span>
+                                    <span class="font-bold" id="ats-score">--%</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>🔶 **Impact Metrics (Verbs & Metrics)**</span>
+                                    <span class="font-bold" id="impact-score">--%</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>🟡 **Section Length & Flow**</span>
+                                    <span class="font-bold" id="length-score">--%</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>🔴 **Keyword Density (Internal)**</span>
+                                    <span class="font-bold" id="keyword-score">--%</span>
+                                </li>
+                            </ul><span>✅ **ATS Readability**</span>
+                                    <span class="font-bold" id="ats-score">--%</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>🔶 **Impact Metrics (Verbs & Metrics)**</span>
+                                    <span class="font-bold" id="impact-score">--%</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>🟡 **Section Length & Flow**</span>
+                                    <span class="font-bold" id="length-score">--%</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>🔴 **Keyword Density (Internal)**</span>
+                                    <span class="font-bold" id="keyword-score">--%</span>
+                                </li>
+                            </ul><span>✅ **ATS Readability**</span>
+                                    <span class="font-bold" id="ats-score">--%</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>🔶 **Impact Metrics (Verbs & Metrics)**</span>
+                                    <span class="font-bold" id="impact-score">--%</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>🟡 **Section Length & Flow**</span>
+                                    <span class="font-bold" id="length-score">--%</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>🔴 **Keyword Density (Internal)**</span>
+                                    <span class="font-bold" id="keyword-score">--%</span>
+                                </li>
+                            </ul>
+                            
+                            <button type="button" onclick="showDetailedReviewMock()" class="w-full bg-red-600 text-white font-bold py-2 mt-4 rounded-md hover:bg-red-700 transition duration-300 text-sm">
+
+                                    View Detailed Review Report (Mock)
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    
+                    <div class="border rounded-lg shadow-sm bg-blue-50">
+                        <button type="button" class="accordion-header flex items-center justify-between w-full p-4 font-medium text-left text-blue-900 rounded-t-lg" data-target="import-content">
+                            <span>📤 Import CV (Paste Text)</span>
+                            <svg class="w-5 h-5 transition-transform duration-300" data-icon="import-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div id="import-content" class="accordion-content p-4 border-t hidden space-y-3">
+                            <p class="text-sm text-gray-700">Paste the **plain text** content of your resume below. The system will attempt to parse the data into the sections. **Mock feature: Uses a regex-based parser.**</p>
+                            <textarea id="cv-paste-area" placeholder="Paste your CV text here..." rows="8" class="input-field"></textarea>
+                            <button type="button" onclick="parseAndImportCV()" class="w-full bg-blue-600 text-white font-bold py-2 rounded-md hover:bg-blue-700 transition duration-300 text-sm">
+                                Parse and Import Data
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="border rounded-lg shadow-sm bg-purple-50">
+                        <button type="button" class="accordion-header flex items-center justify-between w-full p-4 font-medium text-left text-purple-900 rounded-t-lg" data-target="scan-feedback-content">
+                            <span>🤖 Job Scan & Feedback (AI Mock)</span>
+                            <svg class="w-5 h-5 transition-transform duration-300" data-icon="scan-feedback-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div id="scan-feedback-content" class="accordion-content p-4 border-t hidden space-y-3">
+                            <p class="text-sm text-gray-700 font-semibold">1. Paste Job Description</p>
+                            <textarea id="job-description-area" placeholder="Paste the full job description here..." rows="6" class="input-field"></textarea>
+                            <button type="button" onclick="scanResumeAgainstJD()" class="w-full bg-purple-600 text-white font-bold py-2 rounded-md hover:bg-purple-700 transition duration-300 text-sm">
+                                🎯 Scan Resume & Get Feedback
+                            </button>
+                            
+                            <div id="scan-results" class="p-3 bg-white border border-gray-200 rounded-md mt-4 hidden">
+                                <p class="font-bold text-gray-800 mb-1">Match Score: <span class="text-2xl text-purple-600" id="match-score-display">78% (Mock)</span></p>
+                                <p class="text-sm text-gray-700 font-semibold mt-2">Suggestions (Mock):</p>
+                                <ul id="scan-suggestions" class="list-disc ml-5 text-xs text-gray-600 space-y-1">
+                                    <li>Increase keyword density for 'cloud security' in the Experience section.</li>
+                                    <li>Your summary is too generic; tailor it to mention 'high-volume systems.'</li>
+                                    <li>Add a project that demonstrates proficiency in CI/CD pipelines.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border rounded-lg shadow-sm bg-orange-50">
+                        <button type="button" class="accordion-header flex items-center justify-between w-full p-4 font-medium text-left text-orange-900 rounded-t-lg" data-target="section-management-content">
+                            <span>🗂️ Section Management & Reordering</span>
+                            <svg class="w-5 h-5 transition-transform duration-300" data-icon="section-management-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div id="section-management-content" class="accordion-content p-4 border-t hidden space-y-3">
+                            <p class="text-sm font-semibold text-gray-700 mb-2">Toggle Section Visibility:</p>
+                            <div id="section-visibility-fields" class="space-y-2 grid grid-cols-2 gap-2">
+                                </div>
+                            <p class="text-sm font-semibold text-gray-700 mt-4 mb-2">Reorder Sections:</p>
+                            <div id="section-reorder-mock" class="p-3 bg-white border rounded-md">
+                                <p class="text-xs text-gray-500 italic mb-2">Click a button to move the section up/down in the resume order. (Contact/Summary is fixed at top)</p>
+                                <div id="reorder-buttons" class="flex flex-wrap gap-2">
+                                    </div>
+                                <p class="text-xs text-gray-500 italic mt-2">Current Order: <span id="current-order"></span></p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="border rounded-lg shadow-sm bg-gray-50">
+                        <button type="button" class="accordion-header flex items-center justify-between w-full p-4 font-medium text-left text-gray-900" data-target="contact-content">
+                            <span>👤 Contact & Summary</span>
+                            <svg class="w-5 h-5 transition-transform duration-300" data-icon="contact-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div id="contact-content" class="accordion-content p-4 border-t hidden space-y-3">
+                            <input type="text" name="name" data-path="contact.name" placeholder="Full Name" class="input-field">
+                            <input type="text" name="title" data-path="contact.title" placeholder="Professional Title" class="input-field">
+                            <input type="email" name="email" data-path="contact.email" placeholder="Email" class="input-field">
+                            <input type="tel" name="phone" data-path="contact.phone" placeholder="Phone Number" class="input-field">
+                            <input type="text" name="location" data-path="contact.location" placeholder="City, State (e.g. New York, NY)" class="input-field">
+                            <input type="url" name="linkedin" data-path="contact.linkedin" placeholder="LinkedIn Profile URL" class="input-field">
+                            <input type="url" name="portfolio" data-path="contact.portfolio" placeholder="Portfolio/Website URL" class="input-field">
+                            <textarea name="summary" data-path="contact.summary" placeholder="Professional Summary (2-3 sentences)" rows="4" class="input-field"></textarea>
+                            <button type="button" onclick="generateAIContent('contact.summary')" class="w-full bg-blue-400 text-white font-bold py-2 rounded-md hover:bg-blue-500 transition duration-300 text-xs">
+                                ✨ Generate/Refine Summary (AI Mock)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="border rounded-lg shadow-sm bg-gray-50">
+                        <button type="button" class="accordion-header flex items-center justify-between w-full p-4 font-medium text-left text-gray-900" data-target="experience-content">
+                            <span>💼 Work Experience</span>
+                            <svg class="w-5 h-5 transition-transform duration-300" data-icon="experience-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div id="experience-content" class="accordion-content p-4 border-t hidden space-y-4">
+                            <div id="experience-fields" class="space-y-4"></div>
+                            <button type="button" onclick="addItem('experience')" class="w-full text-blue-600 border border-blue-600 hover:bg-blue-600 hover:text-white transition duration-200 py-2 rounded-md text-sm font-semibold flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                                Add Experience
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="border rounded-lg shadow-sm bg-gray-50">
+                        <button type="button" class="accordion-header flex items-center justify-between w-full p-4 font-medium text-left text-gray-900" data-target="education-content">
+                            <span>🎓 Education</span>
+                            <svg class="w-5 h-5 transition-transform duration-300" data-icon="education-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div id="education-content" class="accordion-content p-4 border-t hidden space-y-4">
+                            <div id="education-fields" class="space-y-4"></div>
+                            <button type="button" onclick="addItem('education')" class="w-full text-blue-600 border border-blue-600 hover:bg-blue-600 hover:text-white transition duration-200 py-2 rounded-md text-sm font-semibold flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                                Add Education
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="border rounded-lg shadow-sm bg-gray-50">
+                        <button type="button" class="accordion-header flex items-center justify-between w-full p-4 font-medium text-left text-gray-900" data-target="projects-content">
+                            <span>🚀 Projects</span>
+                            <svg class="w-5 h-5 transition-transform duration-300" data-icon="projects-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div id="projects-content" class="accordion-content p-4 border-t hidden space-y-4">
+                            <div id="projects-fields" class="space-y-4"></div>
+                            <button type="button" onclick="addItem('projects')" class="w-full text-blue-600 border border-blue-600 hover:bg-blue-600 hover:text-white transition duration-200 py-2 rounded-md text-sm font-semibold flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                                Add Project
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="border rounded-lg shadow-sm bg-gray-50">
+                        <button type="button" class="accordion-header flex items-center justify-between w-full p-4 font-medium text-left text-gray-900" data-target="awards-content">
+                            <span>🏆 Awards & Recognition</span>
+                            <svg class="w-5 h-5 transition-transform duration-300" data-icon="awards-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div id="awards-content" class="accordion-content p-4 border-t hidden space-y-4">
+                            <div id="awards-fields" class="space-y-4"></div>
+                            <button type="button" onclick="addItem('awards')" class="w-full text-blue-600 border border-blue-600 hover:bg-blue-600 hover:text-white transition duration-200 py-2 rounded-md text-sm font-semibold flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                                Add Award
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="border rounded-lg shadow-sm bg-gray-50">
+                        <button type="button" class="accordion-header flex items-center justify-between w-full p-4 font-medium text-left text-gray-900" data-target="skills-content">
+                            <span>🛠️ Skills & Expertise</span>
+                            <svg class="w-5 h-5 transition-transform duration-300" data-icon="skills-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div id="skills-content" class="accordion-content p-4 border-t hidden space-y-4">
+                            <p class="text-sm font-semibold text-gray-700">Enter skills as comma-separated lists within categories.</p>
+                            <div id="skills-fields" class="space-y-4"></div>
+                            <button type="button" onclick="addItem('skills')" class="w-full text-blue-600 border border-blue-600 hover:bg-blue-600 hover:text-white transition duration-200 py-2 rounded-md text-sm font-semibold flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                                Add Skill Category
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="border rounded-lg shadow-sm bg-gray-50">
+                        <button type="button" class="accordion-header flex items-center justify-between w-full p-4 font-medium text-left text-gray-900" data-target="referees-content">
+                            <span>📞 Referees</span>
+                            <svg class="w-5 h-5 transition-transform duration-300" data-icon="referees-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div id="referees-content" class="accordion-content p-4 border-t hidden space-y-4">
+                            <div id="referees-fields" class="space-y-4"></div>
+                            <button type="button" onclick="addItem('referees')" class="w-full text-blue-600 border border-blue-600 hover:bg-blue-600 hover:text-white transition duration-200 py-2 rounded-md text-sm font-semibold flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                                Add Referee
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="mt-8 border-t pt-6">
+                    <button type="button" onclick="window.print()" class="w-full bg-green-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-green-700 transition duration-300 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m0 0v1a2 2 0 002 2h6a2 2 0 002-2v-1M5 17h14M12 12V3"/></svg>
+                        Download / Print Resume
+                    </button>
+                    <button type="button" onclick="resetData()" class="w-full bg-red-400 text-white font-bold py-1 mt-2 rounded-md hover:bg-red-500 transition duration-300 text-sm">
+                        Clear All Data
+                    </button>
+                </div>
+
+            </div>
+
+            <div id="preview-section" class="lg:col-span-2 relative">
+                <div id="loading-indicator" class="absolute inset-0 bg-gray-100 bg-opacity-75 flex items-center justify-center z-50 rounded-xl hidden">
+                    <div class="flex flex-col items-center">
+                        <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        <p class="mt-2 text-blue-600 font-semibold">Generating Resume Preview...</p>
+                    </div>
+                </div>
+
+                <div id="resume-preview" class="min-h-screen bg-white shadow-2xl mx-auto my-0" style="max-width: 21cm;">
+                    <div class="flex justify-center items-center h-full text-gray-500">
+                        <p class="text-lg font-medium">Start filling out the sections on the left to see your resume appear here! 🚀</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<script>
+    // --- 1. DATA MODEL AND INITIAL STATE ---
+
+    const defaultResumeData = {
+        template: 'classic',
+        style: {
+            fontFamily: 'Inter',
+            fontSize: 'normal',
+            margins: 'normal',
+            primaryColor: '#2563EB',
+        },
+        contact: {
+            name: 'Nobleworld User',
+            title: 'Full-Stack Developer | AI Enthusiast',
+            email: 'user@example.com',
+            phone: '(555) 123-4567',
+            location: 'San Francisco, CA',
+            linkedin: 'linkedin.com/in/nobleuser',
+            portfolio: 'nobleworld.io',
+            summary: 'Highly motivated and results-driven Full-Stack Developer with 5+ years of experience in designing, developing, and deploying scalable web applications. Proficient in modern JavaScript frameworks, cloud services (AWS), and CI/CD pipelines. Seeking to leverage technical expertise to drive innovation at a growth-stage company.',
+        },
+        experience: [
+            {
+                id: Date.now() + 1,
+                title: 'Senior Software Engineer',
+                company: 'TechCorp Innovations',
+                location: 'San Francisco, CA',
+                startDate: 'Jan 2022',
+                endDate: 'Present',
+                description: '<ul><li>**Led** a team of 4 developers to re-platform a legacy application, resulting in a **40% increase** in performance and a **25% reduction** in cloud costs.</li><li>Designed and implemented a scalable microservices architecture using Node.js, Docker, and Kubernetes.</li><li>Mentored junior engineers on best practices for clean code and test-driven development.</li></ul>',
+            },
+            {
+                id: Date.now(),
+                title: 'Software Developer',
+                company: 'Innovate Solutions',
+                location: 'Seattle, WA',
+                startDate: 'Jul 2018',
+                endDate: 'Dec 2021',
+                description: '<ul><li>Developed and maintained core features for a high-traffic e-commerce platform using React and Python.</li><li>Collaborated with product managers to translate business requirements into technical specifications.</li><li>Reduced reported bugs by 15% through comprehensive unit and integration testing.</li></ul>',
+            },
+        ],
+        education: [
+            {
+                id: Date.now() + 2,
+                degree: 'M.S. in Computer Science',
+                institution: 'Stanford University',
+                location: 'Stanford, CA',
+                year: '2018',
+                details: 'Specialization in Artificial Intelligence and Machine Learning. GPA: 3.9/4.0',
+            },
+            {
+                id: Date.now() + 3,
+                degree: 'B.S. in Software Engineering',
+                institution: 'University of Washington',
+                location: 'Seattle, WA',
+                year: '2016',
+                details: 'Magna Cum Laude. Minor in Mathematics.',
+            },
+        ],
+        projects: [
+            {
+                id: Date.now() + 4,
+                title: 'AI Resume Scorer',
+                link: 'github.com/scorer-project',
+                details: 'Developed a Python-based natural language processing (NLP) tool to score resumes against job descriptions, achieving 85% accuracy.',
+            },
+            {
+                id: Date.now() + 5,
+                title: 'Personal Portfolio Site',
+                link: 'nobleworld.io/portfolio',
+                details: 'Modern, responsive website built with Next.js and TailwindCSS to showcase personal and professional work.',
+            },
+        ],
+        awards: [
+            { id: Date.now() + 6, title: 'Employee of the Year', year: '2023', details: 'Recognized for outstanding contribution to product development.' },
+            { id: Date.now() + 7, title: 'AWS Certified Solutions Architect', year: '2022', details: 'Professional-level certification.' },
+        ],
+        // FIXED SKILL STRUCTURE: Categorized array of objects
+        skills: [
+            { id: Date.now() + 8, category: 'Languages & Frameworks', list: 'JavaScript (ES6+), React, Node.js, Python, TailwindCSS, Next.js' },
+            { id: Date.now() + 9, category: 'Tools & Platforms', list: 'AWS (EC2, Lambda, S3), Docker, Kubernetes, Git, Jira, CI/CD' },
+            { id: Date.now() + 10, category: 'Databases', list: 'PostgreSQL, MongoDB, MySQL' },
+        ],
+        referees: [
+            { id: Date.now() + 11, details: 'References available upon request.' },
+        ],
+        visibility: {
+            experience: true,
+            education: true,
+            projects: true,
+            awards: true,
+            skills: true,
+            referees: true,
+        },
+        // Array to control the order of sections
+        sectionOrder: ['experience', 'education', 'projects', 'skills', 'awards', 'referees'],
+    };
+
+    let resumeData = loadData() || defaultResumeData;
+    const arraySections = ['experience', 'education', 'projects', 'awards', 'skills', 'referees'];
+
+    // --- 2. TEMPLATE DEFINITIONS (10 Templates) ---
+
+    // Utility function for rendering a list of bullet points/details
+    const renderDetailsList = (detailsHTML) => {
+        if (!detailsHTML) return '';
+        const listItems = detailsHTML.replace(/<\/?ul>/g, '').split('<li>').filter(item => item.trim() !== '').map(item => `<li class="ml-5 mt-1 list-disc">${item.replace('</li>', '').trim()}</li>`).join('');
+        return `<ul class="text-gray-700">${listItems}</ul>`;
+    };
+
+    // Utility function to render an array section item
+    const renderArraySectionItem = (item, type, data) => {
+        const pColor = data.style.primaryColor;
+        const baseClass = 'mb-4 break-inside-avoid';
+
+        switch (type) {
+            case 'experience':
+                return `
+                    <div class="${baseClass}">
+                        <div class="flex justify-between">
+                            <h4 class="font-bold text-gray-800">${item.title || 'Job Title'} at ${item.company || 'Company Name'}</h4>
+                            <p class="text-sm text-gray-600">${item.startDate} - ${item.endDate}</p>
+                        </div>
+                        <p class="text-sm italic text-gray-600 mb-1">${item.location}</p>
+                        ${renderDetailsList(item.description)}
+                        <button type="button" onclick="generateAIContent('experience.${item.id}.description')" class="print-hidden mt-1 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full hover:bg-blue-200">✨ Refine Bullets</button>
+                    </div>`;
+            case 'education':
+                return `
+                    <div class="${baseClass}">
+                        <div class="flex justify-between">
+                            <h4 class="font-bold text-gray-800">${item.degree || 'Degree/Certificate'}</h4>
+                            <p class="text-sm text-gray-600">${item.year}</p>
+                        </div>
+                        <p class="text-sm italic text-gray-600">${item.institution || 'Institution Name'} - ${item.location}</p>
+                        <p class="text-sm text-gray-700">${item.details}</p>
+                    </div>`;
+            case 'projects':
+                return `
+                    <div class="${baseClass}">
+                        <h4 class="font-bold text-gray-800">${item.title || 'Project Name'}</h4>
+                        <p class="text-sm italic text-gray-600 mb-1">
+                            Link: <a href="http://${item.link}" target="_blank" class="text-blue-600 hover:underline">${item.link}</a>
+                        </p>
+                        <p class="text-sm text-gray-700">${item.details}</p>
+                    </div>`;
+            case 'awards':
+                return `
+                    <div class="${baseClass}">
+                        <div class="flex justify-between">
+                            <h4 class="font-bold text-gray-800">${item.title || 'Award/Certification'}</h4>
+                            <p class="text-sm text-gray-600">${item.year}</p>
+                        </div>
+                        <p class="text-sm text-gray-700">${item.details}</p>
+                    </div>`;
+            case 'skills':
+                // Skills render logic is template-dependent, so this one is just for the input fields
+                return '';
+            case 'referees':
+                return `<p class="${baseClass} text-sm text-gray-700">${item.details || 'References available upon request.'}</p>`;
+        }
+    };
+
+    // Utility function to render skill categories (Used in many templates)
+    const renderSkillsBlock = (data, isSidebar = false) => {
+        if (!data.visibility.skills || !data.skills.length) return '';
+        const pColor = data.style.primaryColor;
+        const categoryClasses = isSidebar ? 'text-xs' : 'text-sm';
+        const listClasses = isSidebar ? 'text-xs mt-1' : 'text-sm mt-1';
+        
+        return `
+            <div id="skills-section">
+                <h3 class="font-bold text-lg border-b-2" style="border-color:${pColor}; color:${pColor}; padding-bottom: 2px; margin-bottom: 8px;">SKILLS</h3>
+                ${data.skills.map(skill => `
+                    <div class="mb-3">
+                        <p class="font-semibold text-gray-800 ${categoryClasses}">${skill.category}:</p>
+                        <p class="text-gray-700 ${listClasses}">${skill.list}</p>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    };
+
+    // Master function for generating a resume section based on the order and visibility
+    const generateSectionHTML = (sectionName, data) => {
+        if (!data.visibility[sectionName]) return '';
+        const pColor = data.style.primaryColor;
+        const titleMap = {
+            experience: 'WORK EXPERIENCE',
+            education: 'EDUCATION',
+            projects: 'PERSONAL PROJECTS',
+            awards: 'AWARDS & CERTIFICATIONS',
+            referees: 'REFERENCES',
+            skills: 'SKILLS', // Will be overridden if template-specific
+        };
+
+        if (sectionName === 'skills') {
+            return renderSkillsBlock(data);
+        }
+
+        const items = data[sectionName];
+        if (!items || items.length === 0 || (items.length === 1 && items[0].details === 'References available upon request.' && sectionName === 'referees')) {
+            // Optional sections can be hidden if empty/default
+            if (sectionName !== 'referees') return '';
+        }
+
+        const sectionItemsHTML = items.map(item => renderArraySectionItem(item, sectionName, data)).join('');
+        
+        return `
+            <div id="${sectionName}-section" class="mb-6 pb-2 break-inside-avoid">
+                <h3 class="font-bold text-lg border-b-2" style="border-color:${pColor}; color:${pColor}; padding-bottom: 2px; margin-bottom: 8px;">${titleMap[sectionName]}</h3>
+                ${sectionItemsHTML}
+            </div>
+        `;
+    };
+
+    // --- TEMPLATE COLLECTION ---
+
+    const templates = {
+        // 1. Classic Professional (Single Column)
+        classic: (data) => {
+            const pColor = data.style.primaryColor;
+            const contactInfo = [data.contact.phone, data.contact.email, data.contact.linkedin, data.contact.portfolio].filter(Boolean).join(' | ');
+
+            const mainContent = data.sectionOrder.map(section => {
+                if (section === 'skills') return renderSkillsBlock(data);
+                return generateSectionHTML(section, data);
+            }).join('');
+
+            return `
+                <div>
+                    <div class="text-center pb-2 border-b-4 mb-4" style="border-color:${pColor};">
+                        <h1 class="text-4xl font-bold text-gray-800">${data.contact.name}</h1>
+                        <p class="text-xl font-medium text-gray-600 mb-1">${data.contact.title}</p>
+                        <p class="text-sm text-gray-700">${data.contact.location} | ${contactInfo}</p>
+                    </div>
+
+                    ${data.contact.summary ? `<div class="mb-4 text-gray-700"><p>${data.contact.summary}</p></div>` : ''}
+
+                    ${mainContent}
+                </div>
+            `;
+        },
+
+        // 2. Modern Blocks (Single Column with distinct boxes)
+        modern_blocks: (data) => {
+            const pColor = data.style.primaryColor;
+            const contactInfo = [data.contact.phone, data.contact.email, data.contact.linkedin, data.contact.portfolio].filter(Boolean).map(info => `<span class="text-sm text-gray-700">${info}</span>`).join('<span class="mx-2 text-gray-400">|</span>');
+
+            const mainContent = data.sectionOrder.map(section => {
+                if (!data.visibility[section]) return '';
+                const sectionHTML = generateSectionHTML(section, data);
+                if (!sectionHTML) return '';
+
+                // Wrap in a block/box
+                return `<div class="p-4 mb-6 bg-gray-50 border-l-4 rounded-md shadow-sm" style="border-color:${pColor};">${sectionHTML}</div>`;
+            }).join('');
+            
+            return `
+                <div>
+                    <div class="text-left pb-4 mb-4" style="background-color: ${pColor}; color: white; padding: 15px;">
+                        <h1 class="text-4xl font-extrabold">${data.contact.name}</h1>
+                        <p class="text-xl font-light">${data.contact.title}</p>
+                    </div>
+
+                    <div class="mb-6 p-3 border-b-2 border-gray-200">
+                        <div class="flex flex-wrap justify-between items-center mb-3">
+                            <span class="text-sm font-semibold text-gray-800">${data.contact.location}</span>
+                            <div class="flex flex-wrap items-center">${contactInfo}</div>
+                        </div>
+                        ${data.contact.summary ? `<p class="text-gray-700 text-sm">${data.contact.summary}</p>` : ''}
+                    </div>
+
+                    ${mainContent}
+                </div>
+            `;
+        },
+
+        // 3. Minimalist Sidebar (Two-Column Layout)
+        minimalist_sidebar: (data) => {
+            const pColor = data.style.primaryColor;
+            const sidebarSections = ['skills', 'education', 'awards', 'referees'];
+            const mainSections = ['experience', 'projects'];
+
+            const sidebarContent = sidebarSections.map(section => {
+                if (!data.visibility[section]) return '';
+                if (section === 'skills') return renderSkillsBlock(data, true);
+
+                const sectionTitle = section.toUpperCase();
+                const itemsHTML = data[section].map(item => renderArraySectionItem(item, section, data)).join('');
+                if (!itemsHTML && section !== 'referees') return '';
+
+                return `
+                    <div id="${section}-section-sidebar" class="mb-6 break-inside-avoid">
+                        <h4 class="text-md font-bold text-gray-800 border-b-2 mb-2" style="border-color: ${pColor};">${sectionTitle}</h4>
+                        ${itemsHTML}
+                    </div>
+                `;
+            }).join('');
+
+            const mainContent = mainSections.map(section => generateSectionHTML(section, data)).join('');
+
+            return `
+                <div class="two-column-template grid grid-cols-3 gap-6">
+                    <div id="sidebar" class="col-span-1 bg-gray-50 p-6 rounded-l-lg break-inside-avoid" style="border-right: 1px solid ${pColor};">
+                        <div class="mb-6">
+                            <h1 class="text-2xl font-extrabold text-gray-800" style="color:${pColor};">${data.contact.name}</h1>
+                            <p class="text-lg font-medium text-gray-600">${data.contact.title}</p>
+                        </div>
+
+                        <div class="mb-6 text-sm">
+                            <h4 class="text-md font-bold text-gray-800 border-b-2 mb-2" style="border-color: ${pColor};">CONTACT</h4>
+                            <p class="text-gray-700">${data.contact.phone}</p>
+                            <p class="text-gray-700">${data.contact.email}</p>
+                            ${data.contact.linkedin ? `<p class="text-gray-700"><a href="http://${data.contact.linkedin}" class="text-blue-600 hover:underline">${data.contact.linkedin}</a></p>` : ''}
+                            ${data.contact.portfolio ? `<p class="text-gray-700"><a href="http://${data.contact.portfolio}" class="text-blue-600 hover:underline">${data.contact.portfolio}</a></p>` : ''}
+                            <p class="text-gray-700">${data.contact.location}</p>
+                        </div>
+
+                        ${sidebarContent}
+                    </div>
+
+                    <div id="main-content" class="col-span-2 p-6">
+                        ${data.contact.summary ? `<div class="mb-6 pb-2 border-b-2" style="border-color:${pColor}"><p class="text-gray-700">${data.contact.summary}</p></div>` : ''}
+                        
+                        ${mainContent}
+                    </div>
+                </div>
+            `;
+        },
+
+        // 4. Modern Professional (New) - Horizontal Accent
+        modern_professional: (data) => {
+            const pColor = data.style.primaryColor;
+            const contactLinks = [
+                data.contact.email,
+                data.contact.phone,
+                data.contact.linkedin,
+                data.contact.portfolio,
+                data.contact.location
+            ].filter(Boolean);
+
+            const contactHtml = contactLinks.map((item, index) => {
+                const isLink = item.includes('http') || item.includes('.');
+                const text = isLink ? `<a href="http://${item.replace('http://', '').replace('https://', '')}" class="hover:underline">${item}</a>` : item;
+                return `<span class="text-gray-700 text-xs">${text}</span>${index < contactLinks.length - 1 ? '<span class="mx-2 text-gray-400">|</span>' : ''}`;
+            }).join('');
+
+            const mainContent = data.sectionOrder.map(section => {
+                if (section === 'skills') return renderSkillsBlock(data);
+                return generateSectionHTML(section, data);
+            }).join('');
+
+            return `
+                <div>
+                    <div class="text-center mb-6">
+                        <h1 class="text-3xl font-extrabold text-gray-800">${data.contact.name}</h1>
+                        <h2 class="text-xl font-medium text-gray-600 mb-2">${data.contact.title}</h2>
+                        <div class="flex justify-center items-center flex-wrap">${contactHtml}</div>
+                    </div>
+                    <div class="h-2 w-full mb-4" style="background-color: ${pColor};"></div>
+
+                    ${data.contact.summary ? `<div class="mb-6"><p class="text-gray-700 text-sm italic">${data.contact.summary}</p></div>` : ''}
+
+                    <div class="space-y-6">
+                        ${mainContent}
+                    </div>
+                </div>
+            `;
+        },
+
+        // 5. Creative Focus (New) - Boxed sections and bold accents
+        creative_focus: (data) => {
+            const pColor = data.style.primaryColor;
+            const sectionsHtml = data.sectionOrder.map(section => {
+                if (!data.visibility[section]) return '';
+
+                let sectionContent = '';
+                const sectionTitleMap = {
+                    experience: 'WORK EXPERIENCE',
+                    education: 'EDUCATION',
+                    projects: 'PROJECTS',
+                    awards: 'AWARDS',
+                    referees: 'REFERENCES',
+                    skills: 'SKILLS',
+                };
+
+                if (section === 'skills') {
+                    sectionContent = data.skills.map(skill => `
+                        <div class="mb-2">
+                            <span class="font-bold" style="color: ${pColor};">${skill.category}:</span>
+                            <span class="text-gray-700 text-sm">${skill.list}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    sectionContent = data[section].map(item => renderArraySectionItem(item, section, data)).join('');
+                }
+
+                if (!sectionContent && section !== 'referees') return '';
+
+                return `
+                    <div class="p-4 mb-6 rounded-lg border-2 shadow-sm break-inside-avoid" style="border-color: ${pColor};">
+                        <h3 class="font-extrabold text-lg mb-2 border-b" style="color: ${pColor}; border-color: ${pColor};">${sectionTitleMap[section]}</h3>
+                        ${sectionContent}
+                    </div>
+                `;
+            }).join('');
+
+            const contactInfo = [
+                data.contact.location,
+                data.contact.phone,
+                data.contact.email,
+                data.contact.linkedin,
+                data.contact.portfolio
+            ].filter(Boolean).map(info => `<p class="text-sm text-white">${info}</p>`).join('');
+
+
+            return `
+                <div>
+                    <div class="p-6 mb-6 rounded-t-lg text-white" style="background-color: ${pColor};">
+                        <div class="flex justify-between items-start">
+                            <h1 class="text-4xl font-extrabold">${data.contact.name}</h1>
+                            <div class="text-right">${contactInfo}</div>
+                        </div>
+                        <p class="text-xl font-light mt-1">${data.contact.title}</p>
+                    </div>
+
+                    ${data.contact.summary ? `<div class="p-4 mb-6 border-b-2"><p class="text-gray-700 text-md italic">${data.contact.summary}</p></div>` : ''}
+
+                    ${sectionsHtml}
+                </div>
+            `;
+        },
+
+        // --- RESUMENERD-INSPIRED TEMPLATES (6-10) ---
+
+        // 6. Resumenerd - Modern Edge (Minimalist with strong headline)
+        rn_modern: (data) => {
+            const pColor = data.style.primaryColor;
+            const contactInfo = [data.contact.phone, data.contact.email, data.contact.linkedin, data.contact.portfolio, data.contact.location].filter(Boolean).join(' • ');
+
+            const mainContent = data.sectionOrder.map(section => {
+                if (!data.visibility[section]) return '';
+                if (section === 'skills') return renderSkillsBlock(data);
+                
+                const sectionTitleMap = {
+                    experience: 'Experience',
+                    education: 'Education',
+                    projects: 'Projects',
+                    awards: 'Awards',
+                    referees: 'References',
+                };
+                
+                const items = data[section].map(item => renderArraySectionItem(item, section, data)).join('');
+                if (!items && section !== 'skills' && section !== 'referees') return '';
+
+                return `
+                    <div id="${section}-section" class="mb-8 break-inside-avoid">
+                        <h3 class="text-2xl font-bold mb-3" style="color: ${pColor};">${sectionTitleMap[section] || 'Section Title'}</h3>
+                        <div class="space-y-4">${items}</div>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="p-4">
+                    <div class="text-center pb-2 mb-6 border-b" style="border-color:${pColor};">
+                        <h1 class="text-5xl font-extrabold text-gray-800">${data.contact.name}</h1>
+                        <p class="text-2xl font-light text-gray-600 mb-2">${data.contact.title}</p>
+                        <p class="text-sm text-gray-700">${contactInfo}</p>
+                    </div>
+
+                    ${data.contact.summary ? `<div class="mb-8"><p class="text-gray-700 text-lg">${data.contact.summary}</p></div>` : ''}
+
+                    ${mainContent}
+                </div>
+            `;
+        },
+
+        // 7. Resumenerd - Classic Pro 2.0 (Clean, double-line separator)
+        rn_classic_2: (data) => {
+            const pColor = data.style.primaryColor;
+            const contactInfo = [data.contact.location, data.contact.phone, data.contact.email, data.contact.linkedin, data.contact.portfolio].filter(Boolean).join(' | ');
+
+            const renderClassicSection = (sectionName, data) => {
+                if (!data.visibility[sectionName]) return '';
+                if (sectionName === 'skills') return renderSkillsBlock(data);
+                
+                const sectionTitleMap = {
+                    experience: 'PROFESSIONAL EXPERIENCE',
+                    education: 'EDUCATION',
+                    projects: 'PROJECTS',
+                    awards: 'CERTIFICATIONS AND AWARDS',
+                    referees: 'REFERENCES',
+                };
+                
+                const items = data[sectionName].map(item => renderArraySectionItem(item, sectionName, data)).join('');
+                if (!items && sectionName !== 'referees') return '';
+
+                return `
+                    <div id="${sectionName}-section" class="mb-6 break-inside-avoid">
+                        <h3 class="text-base font-bold text-gray-800 mb-1 pt-1" style="border-top: 1px solid ${pColor}; border-bottom: 1px solid ${pColor}; padding: 3px 0;">${sectionTitleMap[sectionName] || 'SECTION TITLE'}</h3>
+                        ${items}
+                    </div>
+                `;
+            };
+
+            const mainContent = data.sectionOrder.map(section => renderClassicSection(section, data)).join('');
+
+            return `
+                <div class="p-4">
+                    <div class="text-center pb-2 mb-4">
+                        <h1 class="text-3xl font-extrabold text-gray-800">${data.contact.name}</h1>
+                        <p class="text-lg font-medium text-gray-600 mb-1">${data.contact.title}</p>
+                        <p class="text-sm text-gray-700">${contactInfo}</p>
+                    </div>
+
+                    ${data.contact.summary ? `<div class="mb-4"><p class="text-gray-700 text-sm">${data.contact.summary}</p></div>` : ''}
+
+                    ${mainContent}
+                </div>
+            `;
+        },
+
+        // 8. Resumenerd - Data Visualization (Skill progress bars mock, single column)
+        rn_data_viz: (data) => {
+            const pColor = data.style.primaryColor;
+            const contactLinks = [data.contact.phone, data.contact.email, data.contact.linkedin, data.contact.location].filter(Boolean).map(info => `<span class="text-xs text-gray-700">${info}</span>`).join('<span class="mx-2 text-gray-400">|</span>');
+
+            const renderVizSkills = (data) => {
+                if (!data.visibility.skills || !data.skills.length) return '';
+                // Mock skill level percentage for visual effect
+                const mockLevels = [90, 80, 70, 95, 85, 75, 60, 50, 65, 55];
+                let skillIndex = 0;
+
+                const skillItems = data.skills.map(skillCategory => {
+                    const skillsList = skillCategory.list.split(',').map(s => s.trim()).filter(Boolean);
+                    
+                    return skillsList.map(skill => {
+                        const level = mockLevels[skillIndex++ % mockLevels.length];
+                        return `
+                            <div class="mb-2 w-1/2 pr-2 inline-block align-top">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-medium text-gray-800">${skill}</span>
+                                    <span class="text-xs font-semibold text-gray-600">${level}%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                    <div class="h-1.5 rounded-full" style="width: ${level}%; background-color: ${pColor};"></div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }).join('');
+
+                return `
+                    <div id="skills-section" class="mb-6 break-inside-avoid">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3 border-b-2" style="border-color: ${pColor};">SKILLS & PROFICIENCY</h3>
+                        <div class="flex flex-wrap -mx-2">${skillItems}</div>
+                    </div>
+                `;
+            };
+
+            const mainContent = data.sectionOrder.map(section => {
+                if (!data.visibility[section]) return '';
+                if (section === 'skills') return renderVizSkills(data);
+
+                const sectionTitleMap = {
+                    experience: 'PROFESSIONAL EXPERIENCE',
+                    education: 'EDUCATION',
+                    projects: 'PROJECTS',
+                    awards: 'AWARDS',
+                    referees: 'REFERENCES',
+                };
+                
+                const items = data[section].map(item => renderArraySectionItem(item, section, data)).join('');
+                if (!items && section !== 'referees') return '';
+
+                return `
+                    <div id="${section}-section" class="mb-6 break-inside-avoid">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3 border-b-2" style="border-color: ${pColor};">${sectionTitleMap[section] || 'SECTION TITLE'}</h3>
+                        ${items}
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="p-4">
+                    <div class="text-center pb-2 mb-6">
+                        <h1 class="text-4xl font-extrabold text-gray-800">${data.contact.name}</h1>
+                        <h2 class="text-xl font-medium text-gray-600 mb-1">${data.contact.title}</h2>
+                        <div class="flex justify-center items-center flex-wrap">${contactLinks}</div>
+                    </div>
+
+                    ${data.contact.summary ? `<div class="mb-6 p-2 border-l-4" style="border-color: ${pColor};"><p class="text-gray-700 text-sm italic">${data.contact.summary}</p></div>` : ''}
+
+                    ${mainContent}
+                </div>
+            `;
+        },
+
+        // 9. Resumenerd - Executive Focus (Bold names, timeline emphasis)
+        rn_executive: (data) => {
+            const pColor = data.style.primaryColor;
+            const contactInfo = [data.contact.phone, data.contact.email, data.contact.linkedin, data.contact.location].filter(Boolean).join(' • ');
+
+            const renderExecutiveExperience = (data) => {
+                if (!data.visibility.experience || !data.experience.length) return '';
+
+                const itemsHTML = data.experience.map(item => `
+                    <div class="mb-6 break-inside-avoid relative pl-5">
+                        <div class="absolute left-0 top-1 w-3 h-3 rounded-full" style="background-color: ${pColor};"></div>
+                        <div class="flex justify-between items-start">
+                            <h4 class="text-base font-extrabold text-gray-800">${item.title || 'Job Title'}</h4>
+                            <p class="text-sm font-semibold text-gray-600">${item.startDate} - ${item.endDate}</p>
+                        </div>
+                        <p class="text-sm font-semibold italic text-gray-700 mb-1">${item.company || 'Company Name'}, ${item.location}</p>
+                        ${renderDetailsList(item.description)}
+                    </div>
+                `).join('');
+
+                return `
+                    <div id="experience-section" class="mb-6 break-inside-avoid">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3 pb-1 border-b" style="border-color: ${pColor};">PROFESSIONAL HISTORY</h3>
+                        <div class="border-l-2 pl-3" style="border-color: #e5e7eb;">${itemsHTML}</div>
+                    </div>
+                `;
+            };
+
+            const renderExecutiveSection = (sectionName, data) => {
+                if (!data.visibility[sectionName] || sectionName === 'experience' || sectionName === 'skills') return '';
+
+                const sectionTitleMap = {
+                    education: 'EDUCATION',
+                    projects: 'KEY PROJECTS',
+                    awards: 'AWARDS & CERTIFICATES',
+                    referees: 'REFERENCES',
+                };
+                
+                const items = data[sectionName].map(item => renderArraySectionItem(item, sectionName, data)).join('');
+                if (!items && sectionName !== 'referees') return '';
+
+                return `
+                    <div id="${sectionName}-section" class="mb-6 break-inside-avoid">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3 pb-1 border-b" style="border-color: ${pColor};">${sectionTitleMap[sectionName] || 'SECTION TITLE'}</h3>
+                        ${items}
+                    </div>
+                `;
+            };
+
+            const mainContent = data.sectionOrder.map(section => {
+                if (section === 'experience') return renderExecutiveExperience(data);
+                if (section === 'skills') return renderSkillsBlock(data);
+                return renderExecutiveSection(section, data);
+            }).join('');
+
+            return `
+                <div class="p-4">
+                    <div class="text-left pb-4 mb-6 border-b-4" style="border-color:${pColor};">
+                        <h1 class="text-5xl font-extrabold text-gray-800">${data.contact.name}</h1>
+                        <p class="text-2xl font-medium text-gray-600 mb-2">${data.contact.title}</p>
+                        <p class="text-sm text-gray-700">${data.contact.location} | ${contactInfo}</p>
+                    </div>
+
+                    ${data.contact.summary ? `<div class="mb-6"><p class="text-gray-700 text-base">${data.contact.summary}</p></div>` : ''}
+
+                    ${mainContent}
+                </div>
+            `;
+        },
+
+        // 10. Resumenerd - Tech Minimalist (Minimalist, modern header)
+        rn_tech_minimal: (data) => {
+            const pColor = data.style.primaryColor;
+            const contactLinks = [data.contact.email, data.contact.phone, data.contact.linkedin, data.contact.portfolio, data.contact.location].filter(Boolean);
+
+            const contactHtml = contactLinks.map((item, index) => {
+                const text = item.includes('http') || item.includes('.') ? `<a href="http://${item.replace('http://', '').replace('https://', '')}" class="hover:underline">${item}</a>` : item;
+                return `<p class="text-xs text-gray-600 mb-1">${text}</p>`;
+            }).join('');
+
+            const mainContent = data.sectionOrder.map(section => {
+                if (!data.visibility[section]) return '';
+                if (section === 'skills') return renderSkillsBlock(data);
+
+                const sectionTitleMap = {
+                    experience: 'EXPERIENCE',
+                    education: 'EDUCATION',
+                    projects: 'PROJECTS',
+                    awards: 'AWARDS',
+                    referees: 'REFERENCES',
+                };
+                
+                const items = data[section].map(item => renderArraySectionItem(item, section, data)).join('');
+                if (!items && section !== 'skills' && section !== 'referees') return '';
+
+                return `
+                    <div id="${section}-section" class="mb-6 break-inside-avoid">
+                        <h3 class="text-lg font-bold mb-2 border-b-2" style="border-color: ${pColor}; padding-bottom: 2px;">${sectionTitleMap[section] || 'SECTION TITLE'}</h3>
+                        ${items}
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="p-6">
+                    <div class="text-center pb-4 mb-6 border-b-2">
+                        <h1 class="text-3xl font-extrabold text-gray-800 mb-1">${data.contact.name}</h1>
+                        <p class="text-xl font-medium text-gray-600">${data.contact.title}</p>
+                        <div class="mt-3 flex justify-center flex-wrap gap-x-4">${contactHtml}</div>
+                    </div>
+
+                    ${data.contact.summary ? `<div class="mb-6"><p class="text-gray-700 text-sm">${data.contact.summary}</p></div>` : ''}
+
+                    ${mainContent}
+                </div>
+            `;
+        },
+
+        // 11. Resumenerd - Bold Sidebar
+        rn_bold_sidebar: (data) => {
+            const pColor = data.style.primaryColor;
+            const sidebarSections = ['skills', 'awards', 'referees'];
+            const mainSections = ['experience', 'education', 'projects'];
+
+            const sidebarContent = sidebarSections.map(section => {
+                if (!data.visibility[section]) return '';
+                if (section === 'skills') return renderSkillsBlock(data, true);
+
+                const sectionTitle = section.toUpperCase();
+                const itemsHTML = data[section].map(item => renderArraySectionItem(item, section, data)).join('');
+                if (!itemsHTML && section !== 'referees') return '';
+
+                return `
+                    <div id="${section}-section-sidebar" class="mb-6 break-inside-avoid">
+                        <h4 class="text-md font-extrabold text-white mb-2 pb-1 border-b" style="border-color: #fff;">${sectionTitle}</h4>
+                        ${itemsHTML}
+                    </div>
+                `;
+            }).join('');
+
+            const mainContent = mainSections.map(section => generateSectionHTML(section, data)).join('');
+
+            return `
+                <div class="two-column-template grid grid-cols-4 gap-0">
+                    <div id="sidebar" class="col-span-1 p-6 text-white break-inside-avoid" style="background-color: ${pColor};">
+                        <div class="mb-6">
+                            <h1 class="text-2xl font-extrabold">${data.contact.name}</h1>
+                            <p class="text-sm font-light">${data.contact.title}</p>
+                        </div>
+
+                        <div class="mb-6 text-xs">
+                            <h4 class="text-md font-extrabold text-white mb-2 pb-1 border-b" style="border-color: #fff;">CONTACT</h4>
+                            <p class="text-white mb-1">${data.contact.phone}</p>
+                            <p class="text-white mb-1">${data.contact.email}</p>
+                            ${data.contact.linkedin ? `<p class="text-white mb-1"><a href="http://${data.contact.linkedin}" class="text-white hover:underline">${data.contact.linkedin}</a></p>` : ''}
+                            <p class="text-white mb-1">${data.contact.location}</p>
+                        </div>
+
+                        ${sidebarContent}
+                    </div>
+
+                    <div id="main-content" class="col-span-3 p-6">
+                        ${data.contact.summary ? `<div class="mb-6 pb-2 border-b-2" style="border-color: #ccc;"><p class="text-gray-700 text-sm italic">${data.contact.summary}</p></div>` : ''}
+                        
+                        ${mainContent}
+                    </div>
+                </div>
+            `;
+        },
+
+        // 12. Resumenerd - Clean Slate
+        rn_clean: (data) => {
+            const pColor = data.style.primaryColor;
+            const contactInfo = [data.contact.location, data.contact.phone, data.contact.email, data.contact.linkedin, data.contact.portfolio].filter(Boolean).join(' • ');
+
+            const renderCleanSection = (sectionName, data) => {
+                if (!data.visibility[sectionName]) return '';
+                if (sectionName === 'skills') return renderSkillsBlock(data);
+                
+                const sectionTitleMap = {
+                    experience: 'Experience',
+                    education: 'Education',
+                    projects: 'Projects',
+                    awards: 'Awards',
+                    referees: 'References',
+                };
+                
+                const items = data[sectionName].map(item => renderArraySectionItem(item, sectionName, data)).join('');
+                if (!items && sectionName !== 'referees') return '';
+
+                return `
+                    <div id="${sectionName}-section" class="mb-6 break-inside-avoid">
+                        <h3 class="text-lg font-bold mb-2 text-gray-800" style="color: ${pColor};">${sectionTitleMap[sectionName] || 'Section Title'}</h3>
+                        <div class="border-t border-gray-300 pt-2">${items}</div>
+                    </div>
+                `;
+            };
+
+            const mainContent = data.sectionOrder.map(section => renderCleanSection(section, data)).join('');
+
+            return `
+                <div class="p-4">
+                    <div class="text-center pb-2 mb-6">
+                        <h1 class="text-4xl font-extrabold text-gray-800">${data.contact.name}</h1>
+                        <p class="text-xl font-medium text-gray-600 mb-1">${data.contact.title}</p>
+                        <p class="text-sm text-gray-700">${contactInfo}</p>
+                    </div>
+
+                    ${data.contact.summary ? `<div class="mb-6 text-center"><p class="text-gray-700 text-sm">${data.contact.summary}</p></div>` : ''}
+
+                    ${mainContent}
+                </div>
+            `;
+        },
+
+        // 13. Resumenerd - Academic Standard (Focus on education and long descriptions)
+        rn_academic: (data) => {
+            const pColor = data.style.primaryColor;
+            const contactInfo = [data.contact.location, data.contact.phone, data.contact.email, data.contact.linkedin, data.contact.portfolio].filter(Boolean).join(' | ');
+
+            const renderAcademicSection = (sectionName, data) => {
+                if (!data.visibility[sectionName]) return '';
+                if (sectionName === 'skills') return renderSkillsBlock(data);
+                
+                const sectionTitleMap = {
+                    experience: 'PROFESSIONAL APPOINTMENTS',
+                    education: 'ACADEMIC HISTORY',
+                    projects: 'RESEARCH PROJECTS',
+                    awards: 'HONORS AND AWARDS',
+                    referees: 'REFERENCES',
+                };
+                
+                const items = data[sectionName].map(item => renderArraySectionItem(item, sectionName, data)).join('');
+                if (!items && sectionName !== 'referees') return '';
+
+                return `
+                    <div id="${sectionName}-section" class="mb-6 break-inside-avoid">
+                        <h3 class="text-lg font-bold mb-2 pt-1 border-b-2" style="border-color: ${pColor};">${sectionTitleMap[sectionName] || 'SECTION TITLE'}</h3>
+                        ${items}
+                    </div>
+                `;
+            };
+
+            const mainContent = data.sectionOrder.map(section => renderAcademicSection(section, data)).join('');
+
+            return `
+                <div class="p-4">
+                    <div class="text-center pb-2 mb-4">
+                        <h1 class="text-3xl font-extrabold text-gray-800">${data.contact.name}</h1>
+                        <p class="text-lg font-medium text-gray-600 mb-1">${data.contact.title}</p>
+                        <p class="text-sm text-gray-700">${contactInfo}</p>
+                    </div>
+
+                    ${data.contact.summary ? `<div class="mb-4"><p class="text-gray-700 text-sm">${data.contact.summary}</p></div>` : ''}
+
+                    ${mainContent}
+                </div>
+            `;
+        },
+
+        // 14. Resumenerd - Creative Professional (Horizontal name, bold sections)
+        rn_creative_pro: (data) => {
+            const pColor = data.style.primaryColor;
+            const contactInfo = [data.contact.location, data.contact.phone, data.contact.email, data.contact.linkedin, data.contact.portfolio].filter(Boolean);
+
+            const contactHtml = contactInfo.map((item, index) => {
+                const isLink = item.includes('http') || item.includes('.');
+                const text = isLink ? `<a href="http://${item.replace('http://', '').replace('https://', '')}" class="hover:underline text-white">${item}</a>` : item;
+                return `<span class="text-white text-sm">${text}</span>${index < contactInfo.length - 1 ? '<span class="mx-2 text-white">|</span>' : ''}`;
+            }).join('');
+
+            const mainContent = data.sectionOrder.map(section => {
+                if (!data.visibility[section]) return '';
+                if (section === 'skills') return renderSkillsBlock(data);
+                
+                const sectionTitleMap = {
+                    experience: 'Experience',
+                    education: 'Education',
+                    projects: 'Projects',
+                    awards: 'Awards',
+                    referees: 'References',
+                };
+                
+                const items = data[section].map(item => renderArraySectionItem(item, section, data)).join('');
+                if (!items && section !== 'skills' && section !== 'referees') return '';
+
+                return `
+                    <div id="${section}-section" class="mb-6 break-inside-avoid">
+                        <h3 class="text-2xl font-extrabold mb-2 text-gray-800" style="color: ${pColor};">${sectionTitleMap[section] || 'Section Title'}</h3>
+                        <div class="border-l-4 pl-3" style="border-color: #e5e7eb;">${items}</div>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="p-4">
+                    <div class="pb-2 mb-6 p-4 rounded-lg" style="background-color: ${pColor};">
+                        <div class="flex justify-between items-center mb-2">
+                            <h1 class="text-4xl font-extrabold text-white">${data.contact.name}</h1>
+                            <div class="flex items-center flex-wrap">${contactHtml}</div>
+                        </div>
+                        <p class="text-xl font-light text-white">${data.contact.title}</p>
+                    </div>
+
+                    ${data.contact.summary ? `<div class="mb-6"><p class="text-gray-700 text-sm italic">${data.contact.summary}</p></div>` : ''}
+
+                    ${mainContent}
+                </div>
+            `;
+        },
+
+        // 15. Resumenerd - Hybrid Chronological (Experience focused, other sections in sidebar)
+        rn_hybrid: (data) => {
+            const pColor = data.style.primaryColor;
+            const sidebarSections = ['education', 'skills', 'awards', 'referees'];
+            const mainSections = ['experience', 'projects'];
+
+            const renderHybridSidebarSection = (sectionName, data) => {
+                if (!data.visibility[sectionName]) return '';
+                if (sectionName === 'skills') return renderSkillsBlock(data, true);
+
+                const sectionTitleMap = {
+                    education: 'EDUCATION',
+                    awards: 'AWARDS',
+                    referees: 'REFERENCES',
+                };
+
+                const sectionTitle = sectionTitleMap[sectionName] || sectionName.toUpperCase();
+                const itemsHTML = data[sectionName].map(item => renderArraySectionItem(item, sectionName, data)).join('');
+                if (!itemsHTML && sectionName !== 'referees') return '';
+
+                return `
+                    <div id="${sectionName}-section-sidebar" class="mb-6 break-inside-avoid text-sm">
+                        <h4 class="text-md font-bold text-gray-800 border-b-2 mb-2" style="border-color: #ccc;">${sectionTitle}</h4>
+                        ${itemsHTML}
+                    </div>
+                `;
+            };
+
+            const sidebarContent = sidebarSections.map(section => renderHybridSidebarSection(section, data)).join('');
+
+            const mainContent = mainSections.map(section => generateSectionHTML(section, data)).join('');
+
+
+            return `
+                <div class="two-column-template grid grid-cols-5 gap-0">
+                    <div id="sidebar" class="col-span-2 p-6 rounded-l-lg break-inside-avoid" style="background-color: #f3f4f6; border-right: 1px solid #ccc;">
+                        <div class="text-center mb-6 border-b pb-4" style="border-color: #ccc;">
+                            <h1 class="text-3xl font-extrabold text-gray-800" style="color: ${pColor};">${data.contact.name}</h1>
+                            <p class="text-lg font-medium text-gray-600">${data.contact.title}</p>
+                        </div>
+
+                        <div class="mb-6 text-sm">
+                            <h4 class="text-md font-bold text-gray-800 border-b-2 mb-2" style="border-color: #ccc;">CONTACT</h4>
+                            <p class="text-gray-700">${data.contact.location}</p>
+                            <p class="text-gray-700">${data.contact.phone}</p>
+                            <p class="text-gray-700">${data.contact.email}</p>
+                            ${data.contact.linkedin ? `<p class="text-gray-700"><a href="http://${data.contact.linkedin}" class="text-blue-600 hover:underline">${data.contact.linkedin}</a></p>` : ''}
+                        </div>
+
+                        ${sidebarContent}
+                    </div>
+
+                    <div id="main-content" class="col-span-3 p-6">
+                        ${data.contact.summary ? `<div class="mb-6"><p class="text-gray-700 text-sm italic">${data.contact.summary}</p></div>` : ''}
+                        
+                        ${mainContent}
+                    </div>
+                </div>
+            `;
+        },
+    };
+
+    // --- 3. CORE LOGIC (STATE MANAGEMENT, RENDERING, PERSISTENCE) ---
+
+    // Load data from localStorage
+    function loadData() {
+        const savedData = localStorage.getItem('nobleworldResumeData');
+        if (savedData) {
+            try {
+                return JSON.parse(savedData);
+            } catch (e) {
+                console.error("Error parsing resume data from localStorage:", e);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    // Save data to localStorage
+    function saveData() {
+        localStorage.setItem('nobleworldResumeData', JSON.stringify(resumeData));
+    }
+
+    // Update data structure and re-render
+    function updateData(path, value) {
+        // Simple dot-notation path update for nested objects
+        const parts = path.split('.');
+        let current = resumeData;
+
+        for (let i = 0; i < parts.length; i++) {
+            if (i === parts.length - 1) {
+                // Handle type conversion for boolean
+                if (value === 'true') value = true;
+                if (value === 'false') value = false;
+                
+                // Handle array updates if the part is a number (ID)
+                if (arraySections.includes(parts[i - 1]) && !isNaN(parseInt(parts[i]))) {
+                    const array = current;
+                    const index = array.findIndex(item => item.id == parts[i]);
+                    const field = parts[i + 1];
+                    if (index !== -1 && field) {
+                        array[index][field] = value;
+                        break;
+                    }
+                }
+
+                current[parts[i]] = value;
+            } else {
+                if (current[parts[i]] === undefined) {
+                    current[parts[i]] = {};
+                }
+                current = current[parts[i]];
+            }
+        }
+        
+        saveData();
+        renderPreview();
+    }
+
+    // Initialize/sync input fields with current resumeData
+    function syncInputs() {
+        document.querySelectorAll('.input-field, select[data-path], input[type="color"][data-path], input[type="checkbox"][data-path]').forEach(input => {
+            const path = input.dataset.path;
+            if (!path) return;
+
+            const parts = path.split('.');
+            let value = resumeData;
+            for (const part of parts) {
+                if (value === undefined || value === null) {
+                    value = '';
+                    break;
+                }
+                value = value[part];
+            }
+
+            if (input.type === 'checkbox') {
+                input.checked = value === true;
+            } else if (value !== undefined) {
+                input.value = value;
+            }
+        });
+
+        renderArrayInputs();
+        renderSectionManagementControls();
+        updateCurrentOrderDisplay();
+        updateScorecardMock();
+    }
+
+    // Attach event listeners to all input fields
+    function attachInputListeners() {
+        document.querySelectorAll('.input-field, select[data-path], input[type="color"][data-path]').forEach(input => {
+            input.addEventListener('input', (e) => {
+                updateData(e.target.dataset.path, e.target.value);
+            });
+        });
+    }
+    
+    // Attach event listeners for dynamic content
+    function attachDynamicListeners(container) {
+        container.querySelectorAll('input, textarea, select').forEach(input => {
+            if (input.dataset.path) {
+                input.addEventListener('input', (e) => {
+                    updateData(e.target.dataset.path, e.target.value);
+                });
+            }
+        });
+    }
+
+    // Render array section inputs (Experience, Education, etc.)
+    function renderArrayInputs() {
+        arraySections.forEach(section => {
+            const container = document.getElementById(`${section}-fields`);
+            if (!container) return;
+            container.innerHTML = '';
+
+            resumeData[section].forEach((item, index) => {
+                container.innerHTML += createArrayItemInputHTML(section, item, index);
+            });
+            
+            attachDynamicListeners(container);
+        });
+    }
+
+    // Generate HTML for a single array item input block
+    function createArrayItemInputHTML(section, item, index) {
+        const pColor = resumeData.style.primaryColor;
+        let fields = '';
+        
+        const removeButton = `<button type="button" onclick="removeItem('${section}', ${item.id})" class="text-xs text-red-600 hover:text-red-800 absolute top-2 right-2">Remove</button>`;
+
+        switch (section) {
+            case 'experience':
+                fields = `
+                    <input type="text" data-path="${section}.${item.id}.title" placeholder="Job Title" value="${item.title || ''}" class="input-field">
+                    <input type="text" data-path="${section}.${item.id}.company" placeholder="Company Name" value="${item.company || ''}" class="input-field">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" data-path="${section}.${item.id}.startDate" placeholder="Start Date (e.g., Jan 2022)" value="${item.startDate || ''}" class="input-field">
+                        <input type="text" data-path="${section}.${item.id}.endDate" placeholder="End Date (e.g., Present or Dec 2023)" value="${item.endDate || ''}" class="input-field">
+                    </div>
+                    <input type="text" data-path="${section}.${item.id}.location" placeholder="City, State" value="${item.location || ''}" class="input-field">
+                    <textarea data-path="${section}.${item.id}.description" placeholder="Description (use <ul><li>...</li></ul> for bullets, or plain text)" rows="6" class="input-field">${item.description || ''}</textarea>
+                    <button type="button" onclick="generateAIContent('experience.${item.id}.description')" class="w-full bg-blue-400 text-white font-bold py-2 rounded-md hover:bg-blue-500 transition duration-300 text-xs">
+                        ✨ Generate/Refine Bullets (AI Mock)
+                    </button>
+                `;
+                break;
+            case 'education':
+                fields = `
+                    <input type="text" data-path="${section}.${item.id}.degree" placeholder="Degree / Qualification" value="${item.degree || ''}" class="input-field">
+                    <input type="text" data-path="${section}.${item.id}.institution" placeholder="Institution Name" value="${item.institution || ''}" class="input-field">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" data-path="${section}.${item.id}.location" placeholder="City, State" value="${item.location || ''}" class="input-field">
+                        <input type="text" data-path="${section}.${item.id}.year" placeholder="Graduation Year" value="${item.year || ''}" class="input-field">
+                    </div>
+                    <textarea data-path="${section}.${item.id}.details" placeholder="Details (GPA, Honors, Thesis Title)" rows="3" class="input-field">${item.details || ''}</textarea>
+                `;
+                break;
+            case 'projects':
+                fields = `
+                    <input type="text" data-path="${section}.${item.id}.title" placeholder="Project Title" value="${item.title || ''}" class="input-field">
+                    <input type="text" data-path="${section}.${item.id}.link" placeholder="Live/Repo Link (e.g. github.com/my-project)" value="${item.link || ''}" class="input-field">
+                    <textarea data-path="${section}.${item.id}.details" placeholder="Project Description & Technologies Used" rows="4" class="input-field">${item.details || ''}</textarea>
+                `;
+                break;
+            case 'awards':
+                fields = `
+                    <input type="text" data-path="${section}.${item.id}.title" placeholder="Award / Certification Name" value="${item.title || ''}" class="input-field">
+                    <input type="text" data-path="${section}.${item.id}.year" placeholder="Year Received" value="${item.year || ''}" class="input-field">
+                    <textarea data-path="${section}.${item.id}.details" placeholder="Details (Issuing Authority, Significance)" rows="3" class="input-field">${item.details || ''}</textarea>
+                `;
+                break;
+            case 'skills':
+                fields = `
+                    <input type="text" data-path="${section}.${item.id}.category" placeholder="Skill Category (e.g., Languages & Frameworks)" value="${item.category || ''}" class="input-field font-semibold" style="border-left: 3px solid ${pColor};">
+                    <textarea data-path="${section}.${item.id}.list" placeholder="Comma-separated list of skills (e.g., JavaScript, React, Node.js)" rows="3" class="input-field">${item.list || ''}</textarea>
+                `;
+                break;
+            case 'referees':
+                fields = `
+                    <textarea data-path="${section}.${item.id}.details" placeholder="Referee Name, Title, Contact Info, or 'References available upon request.'" rows="3" class="input-field">${item.details || ''}</textarea>
+                `;
+                break;
+        }
+
+        return `
+            <div class="relative p-3 border rounded-lg shadow-sm bg-white" data-item-id="${item.id}" data-section="${section}">
+                ${removeButton}
+                <p class="text-xs font-medium text-gray-500 mb-2">${section.toUpperCase()} ITEM ${index + 1}</p>
+                ${fields}
+            </div>
+        `;
+    }
+
+    // Add new item to an array section
+    window.addItem = (section) => {
+        const newItem = { id: Date.now() + Math.random() };
+        
+        // Provide some sensible defaults for fields that are crucial for display
+        if (section === 'experience') {
+            newItem.title = 'New Role';
+            newItem.company = 'New Company';
+            newItem.startDate = 'Month YYYY';
+            newItem.endDate = 'Present';
+            newItem.location = 'City, State';
+            newItem.description = '<ul><li>Responsibility 1.</li><li>Responsibility 2.</li></ul>';
+        } else if (section === 'education') {
+            newItem.degree = 'New Degree';
+            newItem.institution = 'New University';
+            newItem.year = 'YYYY';
+            newItem.location = 'City, State';
+            newItem.details = 'Details...';
+        } else if (section === 'projects') {
+            newItem.title = 'New Project';
+            newItem.link = 'github.com/new-project';
+            newItem.details = 'Description of project.';
+        } else if (section === 'awards') {
+            newItem.title = 'New Award';
+            newItem.year = 'YYYY';
+            newItem.details = 'Award details.';
+        } else if (section === 'skills') {
+            newItem.category = 'New Category';
+            newItem.list = 'Skill 1, Skill 2, Skill 3';
+        } else if (section === 'referees') {
+            newItem.details = 'Reference Name, Title, Contact. (Or "References available upon request.")';
+        }
+
+        resumeData[section].push(newItem);
+        syncInputs();
+        renderPreview();
+    };
+
+    // Remove item from an array section
+    window.removeItem = (section, id) => {
+        resumeData[section] = resumeData[section].filter(item => item.id !== id);
+        syncInputs();
+        renderPreview();
+    };
+
+    // Main render function to draw the template
+    function renderPreview() {
+        const previewElement = document.getElementById('resume-preview');
+        const templateFunction = templates[resumeData.template] || templates.classic;
+
+        // Apply global style changes
+        document.documentElement.style.setProperty('--primary-color', resumeData.style.primaryColor);
+        previewElement.className = `min-h-screen bg-white shadow-2xl mx-auto my-0 ${resumeData.template === 'minimalist_sidebar' || resumeData.template === 'rn_hybrid' || resumeData.template === 'rn_bold_sidebar' ? 'h-full' : ''}`;
+        previewElement.classList.add(`resume-${resumeData.style.fontSize}`);
+        previewElement.classList.add(`margin-${resumeData.style.margins}`);
+        previewElement.style.fontFamily = `'${resumeData.style.fontFamily}', sans-serif`;
+
+        // Render the selected template
+        previewElement.innerHTML = templateFunction(resumeData);
+        saveData();
+    }
+    
+    // --- 4. ACCORDION, REORDERING & MOCK FEATURE LOGIC ---
+
+    // Toggle accordion functionality
+    document.querySelectorAll('.accordion-header').forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.dataset.target;
+            const content = document.getElementById(targetId);
+            const icon = document.querySelector(`[data-icon="${targetId}"]`);
+
+            // Hide all other open accordions
+            document.querySelectorAll('.accordion-content').forEach(otherContent => {
+                if (otherContent.id !== targetId && !otherContent.classList.contains('hidden')) {
+                    otherContent.classList.add('hidden');
+                    document.querySelector(`[data-icon="${otherContent.id}"]`).classList.remove('rotate-180');
+                }
+            });
+
+            // Toggle the clicked one
+            content.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        });
+    });
+
+    // Generate visibility checkboxes and reorder buttons
+    function renderSectionManagementControls() {
+        const visibilityContainer = document.getElementById('section-visibility-fields');
+        const reorderContainer = document.getElementById('reorder-buttons');
+        visibilityContainer.innerHTML = '';
+        reorderContainer.innerHTML = '';
+
+        const sections = ['experience', 'education', 'projects', 'awards', 'skills', 'referees'];
+        const sectionLabels = {
+            experience: 'Work Experience', education: 'Education', projects: 'Projects', 
+            awards: 'Awards/Certs', skills: 'Skills', referees: 'Referees'
+        };
+
+        sections.forEach(section => {
+            // Visibility Checkbox
+            visibilityContainer.innerHTML += `
+                <div class="flex items-center">
+                    <input id="${section}-visible" type="checkbox" data-path="visibility.${section}" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" ${resumeData.visibility[section] ? 'checked' : ''}>
+                    <label for="${section}-visible" class="ml-2 block text-sm text-gray-900">${sectionLabels[section]}</label>
+                </div>
+            `;
+            
+            // Reorder Buttons (only for sections in the order array)
+            const index = resumeData.sectionOrder.indexOf(section);
+            if (index !== -1) {
+                reorderContainer.innerHTML += `
+                    <div class="flex items-center space-x-1 p-1 bg-white border rounded">
+                        <span class="text-xs font-semibold text-gray-700">${sectionLabels[section]}</span>
+                        <button type="button" onclick="moveSection('${section}', 'up')" class="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded hover:bg-gray-300" ${index === 0 ? 'disabled' : ''}>
+                            ↑
+                        </button>
+                        <button type="button" onclick="moveSection('${section}', 'down')" class="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded hover:bg-gray-300" ${index === resumeData.sectionOrder.length - 1 ? 'disabled' : ''}>
+                            ↓
+                        </button>
+                    </div>
+                `;
+            }
+        });
+
+        // Attach listeners for visibility checkboxes
+        visibilityContainer.querySelectorAll('input[type="checkbox"]').forEach(input => {
+            input.addEventListener('change', (e) => {
+                updateData(e.target.dataset.path, e.target.checked);
+                renderSectionManagementControls(); // Re-render to update disabled states
+            });
+        });
+    }
+
+    // Function to move a section up or down in the order array
+    window.moveSection = (sectionName, direction) => {
+        const arr = resumeData.sectionOrder;
+        const index = arr.indexOf(sectionName);
+        if (index === -1) return;
+
+        if (direction === 'up' && index > 0) {
+            [arr[index], arr[index - 1]] = [arr[index - 1], arr[index]];
+        } else if (direction === 'down' && index < arr.length - 1) {
+            [arr[index], arr[index + 1]] = [arr[index + 1], arr[index]];
+        }
+        
+        saveData();
+        renderSectionManagementControls();
+        updateCurrentOrderDisplay();
+        renderPreview();
+    };
+
+    function updateCurrentOrderDisplay() {
+        const display = document.getElementById('current-order');
+        if (display) {
+            const labels = {
+                experience: 'Exp', education: 'Edu', projects: 'Proj', 
+                awards: 'Award', skills: 'Skill', referees: 'Ref'
+            };
+            display.textContent = resumeData.sectionOrder.map(s => labels[s] || s).join(' > ');
+        }
+    }
+
+    // Mock AI Content Generation
+    window.generateAIContent = (path) => {
+        // Simple mock: just append ' - AI Refined' to the text
+        const parts = path.split('.');
+        let current = resumeData;
+        
+        // Traverse to the field
+        for (let i = 0; i < parts.length; i++) {
+            const part = parts[i];
+            if (arraySections.includes(parts[i - 1]) && !isNaN(parseInt(part))) {
+                const item = current.find(item => item.id == part);
+                const field = parts[i + 1];
+                if (item && field) {
+                    item[field] = (item[field] || 'Generated Content') + ' (AI Refined)';
+                    break;
+                }
+            } else if (i === parts.length - 1) {
+                current[part] = (current[part] || 'Generated Content') + ' (AI Refined)';
+            } else {
+                current = current[part];
+            }
+        }
+        
+        syncInputs();
+        renderPreview();
+        alert(`Content for ${path} mocked as 'AI Refined'.`);
+    };
+
+    // Full Resume Review & Scorecard Mock Logic
+    function calculateMockScore() {
+        // Base score calculations based on data completeness
+        let score = 50;
+        const totalFields = 10;
+        let filledFields = 0;
+
+        if (resumeData.contact.name && resumeData.contact.title) filledFields += 2;
+        if (resumeData.contact.summary.length > 50) filledFields += 1;
+        if (resumeData.experience.length > 1) filledFields += 2;
+        if (resumeData.education.length > 0) filledFields += 1;
+        if (resumeData.skills.length > 1) filledFields += 2;
+        if (resumeData.projects.length > 0) filledFields += 1;
+        if (resumeData.awards.length > 0) filledFields += 1;
+
+        score += Math.round((filledFields / totalFields) * 50);
+
+        // Individual metric mocks
+        const ats = 95;
+        const impact = Math.min(90, 50 + resumeData.experience.length * 10);
+        const length = Math.min(90, 50 + (resumeData.sectionOrder.length - 1) * 5);
+        const keyword = Math.min(80, 40 + resumeData.skills.length * 5);
+
+        return {
+            overall: Math.min(99, Math.round((ats + impact + length + keyword) / 4)),
+            impact,
+            length,
+            keyword,
+        };
+    }
+
+    function updateScorecardMock() {
+        const scores = calculateMockScore();
+        document.getElementById('overall-score').textContent = `${scores.overall}%`;
+        document.getElementById('impact-score').textContent = `${scores.impact}%`;
+        document.getElementById('length-score').textContent = `${scores.length}%`;
+        document.getElementById('keyword-score').textContent = `${scores.keyword}%`;
+        
+        // Change color based on score (mock)
+        const colorMap = { 90: 'text-green-600', 75: 'text-orange-600', 60: 'text-yellow-600', 0: 'text-red-600' };
+        document.getElementById('overall-score').className = `text-2xl font-extrabold ${Object.keys(colorMap).sort((a, b) => b - a).find(min => scores.overall >= min) || 'text-red-600'}`;
+    }
+
+    window.showDetailedReviewMock = () => {
+        const scores = calculateMockScore();
+        let suggestions = [
+            `Overall Score is **${scores.overall}%**. Great foundation, but there's room for optimization!`,
+            `**Impact Metrics (${scores.impact}%):** Ensure every bullet point starts with a powerful action verb. Quantify your achievements (e.g., increased sales by 20%).`,
+            `**Keyword Density (${scores.keyword}%):** Tailor your skills and experience sections to the specific job description you're applying for to improve your ATS score.`,
+            `**Section Length (${scores.length}%):** Your experience section is a good length, but consider expanding your projects to showcase deeper technical skills.`,
+        ];
+
+        if (scores.overall < 70) {
+            suggestions.push(`🔴 **URGENT:** Your resume is too brief. Fill out more sections (Projects, Awards, etc.) to reach the one-page minimum standard.`);
+        } else if (scores.overall >= 90) {
+            suggestions.push(`🟢 **EXCELLENT:** Your resume is highly optimized! Focus on minor adjustments based on specific job descriptions.`);
+        }
+
+        alert('--- DETAILED RESUME REVIEW (Mock Report) ---\n\n' + suggestions.join('\n\n'));
+    };
+
+    // Job Scan & Feedback Mock Logic (Simplified keyword matching)
+    window.scanResumeAgainstJD = () => {
+        const jdText = document.getElementById('job-description-area').value.toLowerCase();
+        const resumeText = JSON.stringify(resumeData).toLowerCase();
+        const resultsDiv = document.getElementById('scan-results');
+        const suggestionsList = document.getElementById('scan-suggestions');
+        
+        if (jdText.length < 50) {
+            alert("Please paste a job description of at least 50 characters to run the mock scan.");
+            return;
+        }
+
+        document.getElementById('loading-indicator').classList.remove('hidden');
+
+        setTimeout(() => {
+            // Mock Match Score calculation (very basic)
+            const requiredKeywords = ['leadership', 'python', 'aws', 'scalable', 'ci/cd', 'frontend', 'security', 'agile'];
+            let matches = 0;
+            requiredKeywords.forEach(keyword => {
+                if (jdText.includes(keyword) && resumeText.includes(keyword)) {
+                    matches += 1;
+                }
+            });
+
+            const matchScore = 50 + Math.round((matches / requiredKeywords.length) * 50);
+            
+            // Mock Suggestions
+            const mockSuggestions = [];
+            if (!resumeText.includes('quantified')) {
+                mockSuggestions.push('Use more quantified metrics (numbers, percentages) in your experience descriptions to show impact.');
+            }
+            if (jdText.includes('leadership') && !resumeText.includes('led')) {
+                mockSuggestions.push('The job description emphasizes **leadership**. Ensure your experience section uses action verbs like "Led," "Managed," or "Oversaw."');
+            }
+            if (jdText.includes('security') && !resumeText.includes('security')) {
+                mockSuggestions.push('Increase keyword density for **security** in the relevant sections.');
+            }
+            if (mockSuggestions.length === 0) {
+                mockSuggestions.push('Excellent keyword match! Your resume appears highly tailored for this job description.');
+            }
+
+            document.getElementById('match-score-display').textContent = `${matchScore}% (Mock)`;
+            suggestionsList.innerHTML = mockSuggestions.map(s => `<li class="list-disc ml-5 text-xs text-gray-600 space-y-1">${s}</li>`).join('');
+            resultsDiv.classList.remove('hidden');
+            document.getElementById('loading-indicator').classList.add('hidden');
+            
+            // Re-run scorecard after scan for dynamic score update
+            updateScorecardMock();
+
+        }, 1500);
+    };
+
+    // CV Text Parsing Mock Logic
+    window.parseAndImportCV = () => {
+        const cvText = document.getElementById('cv-paste-area').value;
+        if (cvText.length < 50) {
+            alert("Please paste a full CV text to run the mock parser.");
+            return;
+        }
+
+        document.getElementById('loading-indicator').classList.remove('hidden');
+
+        setTimeout(() => {
+            // Simple mock parser using regex heuristics
+            const newContact = { ...defaultResumeData.contact };
+            const newExperience = [];
+            const newEducation = [];
+
+            // Name (First non-blank line)
+            newContact.name = cvText.trim().split('\n')[0].trim();
+
+            // Email (find pattern)
+            const emailMatch = cvText.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/);
+            if (emailMatch) newContact.email = emailMatch[0];
+
+            // Phone (find pattern)
+            const phoneMatch = cvText.match(/(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/);
+            if (phoneMatch) newContact.phone = phoneMatch[0];
+
+            // Summary (mock: first paragraph after contact info)
+            const textLines = cvText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            if (textLines.length > 1) {
+                newContact.summary = textLines.slice(1, 4).join(' '); // Take next 3 non-empty lines
+                if (newContact.summary.length > 300) newContact.summary = newContact.summary.substring(0, 300) + '...';
+            }
+
+
+            // Mock Experience (look for "Experience" heading and grab next few blocks)
+            const expIndex = cvText.toLowerCase().indexOf('experience');
+            if (expIndex !== -1) {
+                newExperience.push({
+                    id: Date.now() + 101,
+                    title: 'Parsed Job Title (Mock)',
+                    company: 'Parsed Company (Mock)',
+                    startDate: 'Jan 20XX',
+                    endDate: 'Dec 20YY',
+                    location: 'City, State',
+                    description: '<ul><li>Parsed bullet point 1 from CV text block.</li><li>Parsed bullet point 2.</li></ul>',
+                });
+            }
+
+
+            // Update data (merge only the fields we could parse)
+            resumeData.contact = { ...resumeData.contact, ...newContact };
+            if (newExperience.length > 0) resumeData.experience = newExperience;
+            if (newEducation.length > 0) resumeData.education = newEducation;
+            
+            document.getElementById('loading-indicator').classList.add('hidden');
+            syncInputs();
+            renderPreview();
+            alert(`CV Mock Import Complete!\n\nName: ${newContact.name}\nEmail: ${newContact.email}\nExperience items: ${newExperience.length}`);
+
+        }, 1500);
+    };
+    
+    // Function to clear all local storage data and revert to defaults
+    window.resetData = () => {
+        if (confirm("Are you sure you want to clear ALL resume data and revert to the default template? This action cannot be undone.")) {
+            localStorage.removeItem('nobleworldResumeData');
+            resumeData = defaultResumeData;
+            syncInputs();
+            renderPreview();
+            alert("All data cleared. Welcome back!");
+        }
+    }
+
+
+    // --- 5. INITIALIZATION ---
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Initial sync and listener setup
+        syncInputs();
+        attachInputListeners();
+        
+        // 2. Render initial preview
+        renderPreview();
+        
+        // 3. Attach template selector listener (needs to be done after initial sync)
+        document.getElementById('template-select').addEventListener('change', (e) => {
+            updateData('template', e.target.value);
+        });
+
+        // 4. Attach color input listener (needs to be done manually for immediate effect)
+        document.querySelector('input[type="color"][data-path="style.primaryColor"]').addEventListener('input', (e) => {
+            updateData('style.primaryColor', e.target.value);
+        });
+    });
+
+</script>
+
+</body>
+</html>

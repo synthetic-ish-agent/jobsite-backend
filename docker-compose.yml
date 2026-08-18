@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # ---------------------------------
+  # 1. Flask Application Service
+  # ---------------------------------
+  web:
+    # Use the Dockerfile we just created to build this image
+    build: .
+    # Map the container port 8000 to the host port 8000
+    ports:
+      - "8000:8000"
+    # Restart the container if it stops for any reason
+    restart: always
+    # Environment variables for the Flask application
+    environment:
+      # Pass database config via environment variables, NOT hardcoded in app.py
+      # This is a major security improvement for production!
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: db # IMPORTANT: This is the name of the database service below
+      POSTGRES_PORT: 5432
+      APP_SECRET_KEY: Noblechukwu.1 # REPLACE THIS! Use a random secret later
+    # Ensure the DB is ready before the Flask app starts
+    depends_on:
+      - db
+    # Use volumes to persist uploaded files and maybe logs
+    volumes:
+      - ./uploads:/app/uploads
+    # Run the table creation logic automatically on startup
+    # entrypoint: ["/bin/bash", "-c", "python app.py"]
+
+  # ---------------------------------
+  # 2. PostgreSQL Database Service
+  # ---------------------------------
+  db:
+    # Use the official Postgres image from Docker Hub
+    image: postgres:15-alpine
+    # Environment variables for the database
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    # Persist the database data so it isn't lost when the container stops
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    # Map the container port 5432 to the host port 5433 
+    # (so it doesn't conflict with your local Postgres on 5432)
+    ports:
+      - "5433:5432"
+
+# ---------------------------------
+# 3. Volumes Definition
+# ---------------------------------
+volumes:
+  postgres_data:
