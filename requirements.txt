@@ -81,7 +81,7 @@ multidict==6.7.0
 mypy_extensions==1.1.0
 narwhals==2.13.0
 networkx
-numpy==2.3.5
+numpy
 oauthlib==3.3.1
 onnxruntime==1.23.2
 openai==2.11.0
