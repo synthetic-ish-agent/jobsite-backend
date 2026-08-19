@@ -687,5 +687,9 @@ def handle_message(data):
         emit('message', {'sender': sender, 'text': text}, broadcast=True)
 
 
+import os
+
 if __name__ == '__main__':
-    socketio.run(app, debug=False, host='0.0.0.0', port=8000)
+    # Railway provides a PORT environment variable; default to 8000 locally
+    port = int(os.environ.get('PORT', 8000))
+    socketio.run(app, host='0.0.0.0', port=port)
