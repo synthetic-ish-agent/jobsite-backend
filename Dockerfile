@@ -1,36 +1,27 @@
 # Dockerfile
 
-# 1. Use an official Python runtime as a parent image
-FROM python:3.10-slim
+# 1. Use Python 3.11 because scikit-learn 1.8.0 requires Python >= 3.11
+FROM python:3.11-slim
 
 # 2. Set the working directory inside the container
 WORKDIR /app
 
-# 3. Prevent Python from writing .pyc files to disc 
-# and buffer stdout/stderr streams to make logs immediately available
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# 3. Prevent Python from writing .pyc files
+#    and make stdout/stderr appear immediately in Railway logs
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# 4. Copy the requirements file and install dependencies
-# This step is cached, so it only runs if requirements.txt changes
+# 4. Copy requirements first so Docker can cache dependency installation
 COPY requirements.txt .
+
+# 5. Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 5. Copy the entire application code into the container
+# 6. Copy the entire application into the container
 COPY . /app
 
-# 6. Expose the port the application will run on
-# Flask/SocketIO defaults to 8000 in your code
+# 7. Document the application port
 EXPOSE 8000
 
-# 7. Define the command to run the application using Gunicorn 
-# Gunicorn is a fast, stable, and production-ready WSGI server.
-# We run the application instance 'app' defined in 'app.py'
-# NOTE: We use Gunicorn to wrap the SocketIO server via 'eventlet' or 'gevent' for production.
-# Your setup uses SocketIO, so we use the flask_socketio.run server for simplicity,
-# but for true production scaling, Gunicorn with eventlet is better.
-CMD ["python", "app.py"] 
-
-# If you wanted to use Gunicorn/eventlet for production:
-# RUN pip install eventlet
-# CMD ["gunicorn", "app:socketio", "--bind", "0.0.0.0:8000", "-k", "eventlet"]
+# 8. Start the Flask application
+CMD ["python", "app.py"]
